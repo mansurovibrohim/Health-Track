@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}Add Medication - Health Track{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-plus-circle"></i> Add new medication</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('add_medication') }}" id="medicationForm">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="name" class="form-label">
+                                <i class="fas fa-pills"></i> Medication name <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="name" 
+                                   name="name" 
+                                   required
+                                   placeholder="For example: Aspirin">
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="quantity_remaining" class="form-label">
+                                <i class="fas fa-capsules"></i> Remaining quantity (pieces) <span class="text-danger">*</span>
+                            </label>
+                            <input type="number" 
+                                   class="form-control" 
+                                   id="quantity_remaining" 
+                                   name="quantity_remaining" 
+                                   required
+                                   min="1"
+                                   placeholder="For example: 30">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="quantity_per_dose" class="form-label">
+                                <i class="fas fa-tablets"></i> Quantity per dose (pieces) <span class="text-danger">*</span>
+                            </label>
+                            <input type="number" 
+                                   class="form-control" 
+                                   id="quantity_per_dose" 
+                                   name="quantity_per_dose" 
+                                   required
+                                   min="1"
+                                   placeholder="For example: 1">
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="expiration_date" class="form-label">
+                                <i class="fas fa-calendar-times"></i> Expiration date <span class="text-danger">*</span>
+                            </label>
+                            <input type="date" 
+                                   class="form-control" 
+                                   id="expiration_date" 
+                                   name="expiration_date" 
+                                   required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">
+                            <i class="fas fa-info-circle"></i> Description (Optional)
+                        </label>
+                        <textarea class="form-control" 
+                                  id="description" 
+                                  name="description" 
+                                  rows="3"
+                                  placeholder="Additional information about the medication..."></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="times_per_day" class="form-label">
+                            <i class="fas fa-clock"></i> How many times per day? <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-select" id="times_per_day" name="times_per_day" required onchange="updateReminderTimes()">
+                            <option value="1">1 time</option>
+                            <option value="2">2 times</option>
+                            <option value="3">3 times</option>
+                            <option value="4">4 times</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-4" id="reminderTimesContainer">
+                        <label class="form-label">
+                            <i class="fas fa-bell"></i> Reminder times <span class="text-danger">*</span>
+                        </label>
+                        <div id="reminderTimesList">
+                            <div class="mb-2">
+                                <input type="time" 
+                                       class="form-control" 
+                                       name="reminder_time_0" 
+                                       required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-save"></i> Save
+                        </button>
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function updateReminderTimes() {
+    const timesPerDay = parseInt(document.getElementById('times_per_day').value);
+    const container = document.getElementById('reminderTimesList');
+    container.innerHTML = '';
+    
+    for (let i = 0; i < timesPerDay; i++) {
+        const div = document.createElement('div');
+        div.className = 'mb-2';
+        div.innerHTML = `
+            <label class="form-label small">${i + 1}-reminder time:</label>
+            <input type="time" 
+                   class="form-control" 
+                   name="reminder_time_${i}" 
+                   required>
+        `;
+        container.appendChild(div);
+    }
+}
+
+// Set minimum date to today
+document.getElementById('expiration_date').min = new Date().toISOString().split('T')[0];
+</script>
+{% endblock %}
+

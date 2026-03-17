@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}Medications - Health Track{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 style="color: var(--blue);" class="mb-0">
+                <i class="fas fa-pills"></i> My medications
+            </h1>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMedicationModal">
+                <i class="fas fa-plus"></i> Add new medication
+            </button>
+        </div>
+    </div>
+</div>
+
+{% if medications %}
+<div class="row">
+    {% for med in medications %}
+    <div class="col-md-3 col-6 mb-4">
+        <div class="card medication-card h-100 shadow-sm border-0">
+            <div class="card-header p-2 d-flex justify-content-between align-items-center bg-primary text-white" style="border-radius: 12px 12px 0 0;">
+                <h6 class="mb-0 text-truncate fw-bold">
+                    <i class="fas fa-pills me-1"></i> {{ med.name }}
+                </h6>
+            </div>
+            <div class="card-body p-3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    {% if med.expiration_date < today %}
+                    <span class="badge bg-danger">Expired</span>
+                    {% elif med.quantity_remaining < 10 %}
+                    <span class="badge bg-warning text-dark">Low Stock</span>
+                    {% else %}
+                    <span class="badge bg-success">Active</span>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-2" style="font-size: 1rem;">
+                    <i class="fas fa-capsules text-primary" style="width: 20px;"></i> <span class="fw-bold">{{ med.quantity_remaining }}</span> pcs
+                </div>
+                <div class="mb-3" style="font-size: 1rem;">
+                    <i class="fas fa-clock text-danger" style="width: 20px;"></i> <span class="fw-bold">{{ med.times_per_day }}x</span> daily
+                </div>
+                <div class="text-muted" style="font-size: 0.85rem; border-top: 1px solid #eee; padding-top: 0.5rem;">
+                    Exp: {{ med.expiration_date.strftime('%d.%m.%y') }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-pills fa-4x text-muted mb-3"></i>
+                <h4 class="text-muted">No medications added yet</h4>
+                <p class="text-muted mb-4">Add and save your first medication</p>
+                <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#addMedicationModal">
+                    <i class="fas fa-plus"></i> Add your first medication
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Add Medication Modal -->
+<div class="modal fade" id="addMedicationModal" tabindex="-1" aria-labelledby="addMedicationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="border-radius: 20px; overflow: hidden;">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="addMedicationModalLabel"><i class="fas fa-plus-circle"></i> Add New Medication</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ url_for('add_medication') }}" id="medicationForm">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="name" class="form-label">Medication name *</label>
+                            <input type="text" class="form-control" id="name" name="name" required placeholder="e.g. Aspirin">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="quantity_remaining" class="form-label">Remaining quantity (pcs) *</label>
+                            <input type="number" class="form-control" id="quantity_remaining" name="quantity_remaining" required min="1" placeholder="e.g. 30">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="quantity_per_dose" class="form-label">Quantity per dose (pcs) *</label>
+                            <input type="number" class="form-control" id="quantity_per_dose" name="quantity_per_dose" required min="1" value="1">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="expiration_date" class="form-label">Expiration date *</label>
+                            <input type="date" class="form-control" id="expiration_date" name="expiration_date" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description (Optional)</label>
+                        <textarea class="form-control" id="description" name="description" rows="2"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="times_per_day" class="form-label">How many times per day? *</label>
+                        <select class="form-select" id="times_per_day" name="times_per_day" required onchange="updateReminderTimes()">
+                            <option value="1">1 time</option>
+                            <option value="2">2 times</option>
+                            <option value="3">3 times</option>
+                            <option value="4">4 times</option>
+                        </select>
+                    </div>
+                    <div id="reminderTimesContainer" class="mb-3">
+                        <label class="form-label">Reminder times *</label>
+                        <div id="reminderTimesList">
+                            <div class="mb-2">
+                                <input type="time" class="form-control" name="reminder_time_0" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Save Medication</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function updateReminderTimes() {
+    const times = document.getElementById('times_per_day').value;
+    const container = document.getElementById('reminderTimesList');
+    container.innerHTML = '';
+    
+    for (let i = 0; i < times; i++) {
+        const div = document.createElement('div');
+        div.className = 'mb-2';
+        div.innerHTML = `<input type="time" class="form-control" name="reminder_time_${i}" required>`;
+        container.appendChild(div);
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Health Track{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="col-md-5">
+        <div class="card login-card">
+            <div class="card-header text-center">
+                <div class="login-icon mb-3">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <h3 class="mb-0">Login</h3>
+                <p class="mb-0 mt-2" style="opacity: 0.9; font-size: 0.9rem;">Welcome to your health tracking platform</p>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="{{ url_for('login') }}" id="loginForm">
+                    <div class="mb-4">
+                        <label for="email" class="form-label">
+                            <i class="fas fa-envelope"></i> Email
+                        </label>
+                        <input type="email" 
+                               class="form-control form-control-lg" 
+                               id="email" 
+                               name="email" 
+                               required
+                               placeholder="Enter your email"
+                               autocomplete="email">
+                    </div>
+                    <div class="mb-4">
+                        <label for="password" class="form-label">
+                            <i class="fas fa-lock"></i> Password
+                        </label>
+                        <input type="password" 
+                               class="form-control form-control-lg" 
+                               id="password" 
+                               name="password" 
+                               required
+                               placeholder="Enter your password"
+                               autocomplete="current-password">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 btn-lg">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                </form>
+                <hr class="my-4">
+                <div class="text-center">
+                    <p class="mb-2">Don't have an account? 
+                        <a href="{{ url_for('register') }}" class="fw-bold" style="color: var(--blue);">Register</a>
+                    </p>
+                    <p class="mb-0">
+                        <a href="{{ url_for('admin_login') }}" style="color: var(--red); font-size: 0.85rem;">
+                            <i class="fas fa-shield-alt"></i> Admin Login
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.login-card {
+    animation: fadeIn 0.6s ease-out;
+}
+
+.form-control-lg {
+    padding: 1rem 1.25rem;
+    font-size: 1rem;
+}
+
+.btn-lg {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+}
+</style>
+{% endblock %}

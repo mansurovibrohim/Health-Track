@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Select Country - Health Track{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header text-center">
+                <h3 class="mb-0"><i class="fas fa-globe"></i> Select country and city</h3>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="{{ url_for('select_country') }}">
+                    <div class="mb-3">
+                        <label for="country" class="form-label">
+                            <i class="fas fa-globe"></i> Country
+                        </label>
+                        <select class="form-select" id="country" name="country" required onchange="updateCities()">
+                            <option value="">Select country...</option>
+                            <option value="UZ">Uzbekistan</option>
+                            <option value="US">USA</option>
+                            <option value="RU">Russia</option>
+                            <option value="KZ">Kazakhstan</option>
+                            <option value="TJ">Tajikistan</option>
+                            <option value="KG">Kyrgyzstan</option>
+                            <option value="TM">Turkmenistan</option>
+                            <option value="AF">Afghanistan</option>
+                            <option value="TR">Turkey</option>
+                            <option value="CN">China</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="city" class="form-label">
+                            <i class="fas fa-city"></i> City / Region
+                        </label>
+                        <select class="form-select" id="city" name="city" required>
+                            <option value="">Select country first...</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-check"></i> Save
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function updateCities() {
+    const country = document.getElementById('country').value;
+    const citySelect = document.getElementById('city');
+    
+    citySelect.innerHTML = '<option value="">Loading...</option>';
+    
+    if (!country) {
+        citySelect.innerHTML = '<option value="">Select country first...</option>';
+        return;
+    }
+    
+    fetch(`/api/cities/${country}`)
+        .then(response => response.json())
+        .then(data => {
+            citySelect.innerHTML = '<option value="">Select city/region...</option>';
+            data.cities.forEach(city => {
+                const option = document.createElement('option');
+                option.value = city;
+                option.textContent = city;
+                citySelect.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching cities:', error);
+            citySelect.innerHTML = '<option value="">Error loading cities</option>';
+        });
+}
+</script>
+{% endblock %}

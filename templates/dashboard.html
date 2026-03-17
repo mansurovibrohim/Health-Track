@@ -1,0 +1,848 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Health Track{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section mb-4">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h1 class="hero-title">
+                <i class="fas fa-heartbeat" style="color: var(--red);"></i> Welcome, {{ current_user.username }}!
+            </h1>
+            <p class="hero-subtitle">Your personal health tracking dashboard</p>
+        </div>
+        <div class="col-md-4">
+            <div class="time-display text-center">
+                <div class="current-time" id="currentTime"></div>
+                <div class="current-date" id="currentDate"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if air_quality_data %}
+<!-- ======= IQAir-style AQI Banner ======= -->
+<div class="row mt-5 mb-5">
+    <div class="col-12">
+        <div class="aqi-banner aqi-bg-{{ air_quality_data.avg_score }}">
+            <div class="row align-items-center">
+                <div class="col-md-3 col-6 text-center text-md-start">
+                    <div class="aqi-big-number">{{ air_quality_data.us_aqi }}</div>
+                    <div class="aqi-big-label">AQI</div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="aqi-status-text">{{ air_quality_data.aqi_label }}</div>
+                    <div class="aqi-main-pollutant mt-2">
+                        Main pollutant: <strong>{{ air_quality_data.main_pollutant }}</strong>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    {% if weather_data %}
+                    <div class="aqi-weather-row">
+                        <div class="aqi-weather-item">
+                            <img src="http://openweathermap.org/img/wn/{{ weather_data.icon }}@2x.png" alt="{{ weather_data.description }}" style="width: 48px; height: 48px;">
+                            <span>{{ weather_data.temperature }}°C</span>
+                        </div>
+                        <div class="aqi-weather-item">
+                            <i class="fas fa-wind"></i>
+                            <span>{{ weather_data.wind_speed }} m/s</span>
+                        </div>
+                        <div class="aqi-weather-item">
+                            <i class="fas fa-tint"></i>
+                            <span>{{ weather_data.humidity }}%</span>
+                        </div>
+                        <div class="aqi-weather-item">
+                            <i class="fas fa-leaf" style="color: #10b981;"></i>
+                            <span>Pollination: <strong>{{ weather_data.pollen }}</strong></span>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div> <!-- aqi-banner -->
+    </div> <!-- col-12 -->
+</div> <!-- Banner Row -->
+
+<!-- ======= Hourly AQI Forecast ======= -->
+{% if aqi_forecast %}
+<div class="row mt-4 mb-5">
+    <div class="col-12">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white" style="border-radius: 12px 12px 0 0;">
+                <h5 class="mb-0"><i class="fas fa-chart-line"></i> Hourly AQI Forecast — {{ current_user.city or 'your city' }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="forecast-scroll">
+                    <div class="forecast-row">
+                        {% for f in aqi_forecast %}
+                        <div class="forecast-item">
+                            <div class="forecast-time">{{ f.time }}</div>
+                            <div class="forecast-aqi-badge aqi-bg-{{ f.aqi_level }}">{{ f.us_aqi }}</div>
+                            <div class="forecast-pm">PM2.5: {{ f.pm2_5 }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- ======= Air Pollutants + AQI Advice ======= -->
+<div class="row mb-5">
+    <div class="col-md-7 mb-4">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-header bg-primary text-white" style="border-radius: 12px 12px 0 0;">
+                <h5 class="mb-0"><i class="fas fa-vial"></i> Air Pollutants — {{ current_user.city or 'your city' }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6 col-6">
+                        <div class="pollutant-card">
+                            <div class="pollutant-name">PM2.5</div>
+                            <div class="pollutant-desc">Fine particles (≤ 2.5 μm)</div>
+                            <div class="pollutant-value-row">
+                                <span class="pollutant-dot" style="background-color: {% if air_quality_data.pm2_5 < 10 %}#059669{% elif air_quality_data.pm2_5 < 25 %}#3b82f6{% elif air_quality_data.pm2_5 < 50 %}#f59e0b{% else %}#dc2626{% endif %};"></span>
+                                <span class="pollutant-value">{{ air_quality_data.pm2_5 }} <small>μg/m³</small></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-6">
+                        <div class="pollutant-card">
+                            <div class="pollutant-name">PM10</div>
+                            <div class="pollutant-desc">Coarse particles (≤ 10 μm)</div>
+                            <div class="pollutant-value-row">
+                                <span class="pollutant-dot" style="background-color: {% if air_quality_data.pm10 < 20 %}#059669{% elif air_quality_data.pm10 < 50 %}#3b82f6{% elif air_quality_data.pm10 < 100 %}#f59e0b{% else %}#dc2626{% endif %};"></span>
+                                <span class="pollutant-value">{{ air_quality_data.pm10 }} <small>μg/m³</small></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-6">
+                        <div class="pollutant-card">
+                            <div class="pollutant-name">O₃</div>
+                            <div class="pollutant-desc">Ozone</div>
+                            <div class="pollutant-value-row">
+                                <span class="pollutant-dot" style="background-color: {% if air_quality_data.o3 < 60 %}#059669{% elif air_quality_data.o3 < 100 %}#3b82f6{% elif air_quality_data.o3 < 140 %}#f59e0b{% else %}#dc2626{% endif %};"></span>
+                                <span class="pollutant-value">{{ air_quality_data.o3 }} <small>μg/m³</small></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-6">
+                        <div class="pollutant-card">
+                            <div class="pollutant-name">SO₂</div>
+                            <div class="pollutant-desc">Sulfur dioxide</div>
+                            <div class="pollutant-value-row">
+                                <span class="pollutant-dot" style="background-color: {% if air_quality_data.so2 < 20 %}#059669{% elif air_quality_data.so2 < 80 %}#3b82f6{% elif air_quality_data.so2 < 250 %}#f59e0b{% else %}#dc2626{% endif %};"></span>
+                                <span class="pollutant-value">{{ air_quality_data.so2 }} <small>μg/m³</small></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-6">
+                        <div class="pollutant-card">
+                            <div class="pollutant-name">CO</div>
+                            <div class="pollutant-desc">Carbon monoxide</div>
+                            <div class="pollutant-value-row">
+                                <span class="pollutant-dot" style="background-color: {% if air_quality_data.co < 4400 %}#059669{% elif air_quality_data.co < 9400 %}#3b82f6{% elif air_quality_data.co < 12400 %}#f59e0b{% else %}#dc2626{% endif %};"></span>
+                                <span class="pollutant-value">{{ air_quality_data.co }} <small>μg/m³</small></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-6">
+                        <div class="pollutant-card">
+                            <div class="pollutant-name">Pollination</div>
+                            <div class="pollutant-desc">Pollen/Dust Level</div>
+                            <div class="pollutant-value-row">
+                                <span class="pollutant-dot" style="background-color: #10b981;"></span>
+                                <span class="pollutant-value">{{ weather_data.pollen }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AQI Health Advice -->
+    <div class="col-md-5 mb-4">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-header aqi-bg-{{ air_quality_data.avg_score }} text-white" style="border-radius: 12px 12px 0 0;">
+                <h5 class="mb-0"><i class="fas fa-shield-alt"></i> Health Advice</h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="text-center mb-3">
+                    <div class="aqi-circle" style="border-color: {{ air_quality_data.aqi_color }};">
+                        <div class="aqi-circle-value" style="color: {{ air_quality_data.aqi_color }};">{{ air_quality_data.us_aqi }}</div>
+                        <div class="aqi-circle-label">AQI</div>
+                    </div>
+                    <h5 class="mt-2" style="color: {{ air_quality_data.aqi_color }};">{{ air_quality_data.aqi_label }}</h5>
+                </div>
+                <div class="aqi-advice-box">
+                    <p class="mb-0"><i class="fas fa-info-circle text-primary"></i> {{ air_quality_data.aqi_advice }}</p>
+                </div>
+                {% if weather_data %}
+                <hr>
+                <div class="weather-advice-box">
+                    <h6><i class="fas fa-lightbulb" style="color: var(--red);"></i> Weather Advice:</h6>
+                    <p class="mb-0 small">{{ weather_data.advice }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endif %}
+
+<!-- ======= Global Pollination & AQI Map ======= -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white" style="border-radius: 12px 12px 0 0;">
+                <h5 class="mb-0"><i class="fas fa-globe-americas"></i> Global Air Quality Map</h5>
+            </div>
+            <div class="card-body p-0 position-relative" style="background: #f8fafc;">
+                <!-- Circular Map Container -->
+                <div class="map-wrapper d-flex justify-content-center align-items-center py-4">
+                    <div id="airMap" class="circular-map shadow-lg"></div>
+                    <div class="map-overlay-info">
+                        <div class="badge bg-white text-dark shadow-sm p-2" style="border-radius: 10px; font-size: 0.75rem;">
+                            <i class="fas fa-sync fa-spin text-primary"></i> Live Forecast
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Map Legend -->
+                <div class="map-legend p-3 border-top d-flex justify-content-center gap-3 flex-wrap" style="font-size: 0.8rem;">
+                    <div class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#059669;"></span> Good</div>
+                    <div class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#f59e0b;"></span> Moderate</div>
+                    <div class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#dc2626;"></span> Poor</div>
+                    <div class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#7c2d12;"></span> Very Poor</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ======= City AQI Ranking ======= -->
+{% if city_rankings %}
+<div class="row mb-5">
+    <!-- Most Polluted -->
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow-sm border-0 h-100" style="border-radius: 16px; min-height: 550px; display: flex; flex-direction: column;">
+            <div class="card-body p-4" style="flex: 1;">
+                <h5 class="fw-bold mb-1">Live most polluted city ranking</h5>
+                <p class="text-muted small mb-4">Real-time {{ city_rankings.country_name }} most polluted city ranking</p>
+                
+                <div class="ranking-list">
+                    <div class="d-flex text-muted small mb-2 px-2">
+                        <div style="width: 30px;">#</div>
+                        <div class="flex-grow-1">Cities</div>
+                        <div style="width: 60px; text-align: right;">AQI US</div>
+                    </div>
+                    
+                    {% for city in city_rankings.most_polluted %}
+                    <div class="d-flex align-items-center py-2 px-2 border-bottom-light" style="border-bottom: 1px solid #f1f5f9;">
+                        <div class="fw-bold" style="width: 30px;">{{ loop.index }}</div>
+                        <div class="flex-grow-1 d-flex align-items-center">
+                            <img src="https://flagcdn.com/w20/{{ current_user.country|lower }}.png" class="me-2" style="width: 20px; border-radius: 2px;">
+                            <span class="fw-medium">{{ city.city }}</span>
+                        </div>
+                        <div style="width: 60px; text-align: right;">
+                            <span class="badge" style="background-color: {{ city.aqi_color }}; min-width: 45px; border-radius: 6px; padding: 6px 8px;">
+                                {{ city.us_aqi }}
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Most Polluted Summary Footer -->
+            <div class="p-3 mx-4 mb-4" style="background-color: #fff7ed; border-radius: 12px; border: 1px solid #ffedd5;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="fw-bold small">2024 {{ city_rankings.country_name }} most polluted city</div>
+                        <div class="text-muted small">{{ city_rankings.most_polluted_summary.city }}, {{ city_rankings.most_polluted_summary.city }}</div>
+                    </div>
+                    <div class="badge" style="background-color: {{ city_rankings.most_polluted_summary.color }}; border-radius: 6px; padding: 8px 12px; font-size: 0.9rem;">
+                        {{ city_rankings.most_polluted_summary.aqi }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cleanest -->
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow-sm border-0 h-100" style="border-radius: 16px; min-height: 550px; display: flex; flex-direction: column;">
+            <div class="card-body p-4" style="flex: 1;">
+                <h5 class="fw-bold mb-1">Live cleanest city ranking</h5>
+                <p class="text-muted small mb-4">Real-time {{ city_rankings.country_name }} cleanest city ranking</p>
+                
+                <div class="ranking-list">
+                    <div class="d-flex text-muted small mb-2 px-2">
+                        <div style="width: 30px;">#</div>
+                        <div class="flex-grow-1">Cities</div>
+                        <div style="width: 60px; text-align: right;">AQI US</div>
+                    </div>
+                    
+                    {% for city in city_rankings.cleanest %}
+                    <div class="d-flex align-items-center py-2 px-2 border-bottom-light" style="border-bottom: 1px solid #f1f5f9;">
+                        <div class="fw-bold" style="width: 30px;">{{ loop.index }}</div>
+                        <div class="flex-grow-1 d-flex align-items-center">
+                            <img src="https://flagcdn.com/w20/{{ current_user.country|lower }}.png" class="me-2" style="width: 20px; border-radius: 2px;">
+                            <span class="fw-medium">{{ city.city }}</span>
+                        </div>
+                        <div style="width: 60px; text-align: right;">
+                            <span class="badge" style="background-color: {{ city.aqi_color }}; min-width: 45px; border-radius: 6px; padding: 6px 8px;">
+                                {{ city.us_aqi }}
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Cleanest Summary Footer -->
+            <div class="p-3 mx-4 mb-4" style="background-color: #f0fdf4; border-radius: 12px; border: 1px solid #dcfce7;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="fw-bold small">2024 {{ city_rankings.country_name }} cleanest city</div>
+                        <div class="text-muted small">{{ city_rankings.cleanest_summary.city }}, Toshkent</div>
+                    </div>
+                    <div class="badge" style="background-color: {{ city_rankings.cleanest_summary.color }}; border-radius: 6px; padding: 8px 12px; font-size: 0.9rem;">
+                        {{ city_rankings.cleanest_summary.aqi }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- ======= Weather Card (if no AQI but weather exists) ======= -->
+{% if weather_data and not air_quality_data %}
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white" style="border-radius: 12px 12px 0 0;">
+                <h5 class="mb-0"><i class="fas fa-cloud-sun"></i> Weather — {{ current_user.city or 'your city' }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-3 text-center">
+                        <img src="http://openweathermap.org/img/wn/{{ weather_data.icon }}@2x.png" alt="{{ weather_data.description }}" style="width: 80px;">
+                        <h2 style="color: var(--blue); font-weight: 700;">{{ weather_data.temperature }}°C</h2>
+                        <p class="text-muted">{{ weather_data.description }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p><i class="fas fa-thermometer-half" style="color: var(--red);"></i> Feels like: <strong>{{ weather_data.feels_like }}°C</strong></p>
+                        <p><i class="fas fa-tint" style="color: var(--blue);"></i> Humidity: <strong>{{ weather_data.humidity }}%</strong></p>
+                        <p><i class="fas fa-wind" style="color: var(--blue);"></i> Wind: <strong>{{ weather_data.wind_speed }} m/s</strong></p>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="weather-advice-box">
+                            <h6><i class="fas fa-lightbulb" style="color: var(--red);"></i> Advice:</h6>
+                            <p class="mb-0">{{ weather_data.advice }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- ======= No weather/city setup notice ======= -->
+{% if not weather_data and not air_quality_data %}
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body text-center py-4">
+                <i class="fas fa-map-marker-alt fa-3x" style="color: var(--blue);"></i>
+                <h5 class="mt-3">Set your city to see weather and air quality</h5>
+                <p class="text-muted">Go to your profile and select a country and city.</p>
+                <a href="{{ url_for('profile') }}" class="btn btn-primary">
+                    <i class="fas fa-user-cog"></i> Go to Profile
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- ======= Statistics Cards ======= -->
+<div class="row mb-5">
+    <div class="col-md-3 col-6 mb-3">
+        <div class="stat-card stat-card-primary h-100">
+            <div class="stat-icon"><i class="fas fa-pills"></i></div>
+            <div class="stat-content">
+                <h3 class="stat-number">{{ medications|length }}</h3>
+                <p class="stat-label">Total medications</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6 mb-3">
+        <div class="stat-card stat-card-success h-100">
+            <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+            <div class="stat-content">
+                <h3 class="stat-number">{{ medications|selectattr('quantity_remaining', 'gt', 0)|list|length }}</h3>
+                <p class="stat-label">Active</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6 mb-3">
+        <div class="stat-card stat-card-warning h-100">
+            <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <div class="stat-content">
+                <h3 class="stat-number">{{ medications|selectattr('quantity_remaining', 'lt', 10)|list|length }}</h3>
+                <p class="stat-label">Low stock</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6 mb-3">
+        <div class="stat-card stat-card-info h-100">
+            <div class="stat-icon"><i class="fas fa-bell"></i></div>
+            <div class="stat-content">
+                <h3 class="stat-number">{{ upcoming_reminders|length }}</h3>
+                <p class="stat-label">Today's reminders</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Upcoming Reminders -->
+{% if upcoming_reminders %}
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header" style="background-color: var(--red);">
+                <h5 class="mb-0"><i class="fas fa-bell"></i> Upcoming Reminders</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for reminder in upcoming_reminders %}
+                    <div class="col-md-4 mb-3">
+                        <div class="reminder-card">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="reminder-time-badge"><i class="fas fa-clock"></i> {{ reminder.time }}</span>
+                                <span class="badge" style="background-color: var(--blue); color: white;">{{ reminder.quantity }} pill(s)</span>
+                            </div>
+                            <h6 class="mb-0"><i class="fas fa-pills" style="color: var(--red);"></i> {{ reminder.medication }}</h6>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_css %}
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<style>
+    .circular-map {
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        border: 8px solid var(--white);
+        overflow: hidden;
+        z-index: 1;
+        /* Force WebKit browsers to actually clip the map tiles to the circle */
+        -webkit-mask-image: -webkit-radial-gradient(white, black);
+        background-color: #cbd5e1; /* Ocean/background color */
+    }
+    
+    .map-wrapper {
+        perspective: 1000px;
+    }
+    
+    .legend-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+    
+    .pollutant-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 5px;
+    }
+
+/* ===== IQAir-Style AQI Banner ===== */
+.aqi-banner {
+    border-radius: 16px;
+    padding: 2rem;
+    color: white;
+    box-shadow: 0 4px 16px #0000001a;
+}
+
+.aqi-big-number {
+    font-size: 4rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.aqi-big-label {
+    font-size: 1rem;
+    font-weight: 600;
+    opacity: 0.9;
+}
+
+.aqi-status-text {
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.aqi-main-pollutant {
+    font-size: 0.95rem;
+    opacity: 0.9;
+}
+
+.aqi-weather-row {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.aqi-weather-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* ===== Hourly Forecast ===== */
+.forecast-scroll {
+    overflow-x: auto;
+}
+
+.forecast-row {
+    display: flex;
+    gap: 1rem;
+    min-width: max-content;
+}
+
+.forecast-item {
+    text-align: center;
+    padding: 1rem;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    min-width: 90px;
+    transition: all 0.3s ease;
+}
+
+.forecast-item:hover {
+    border-color: var(--blue);
+    transform: translateY(-2px);
+}
+
+.forecast-time {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
+}
+
+.forecast-aqi-badge {
+    display: inline-block;
+    padding: 0.4rem 0.75rem;
+    border-radius: 8px;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.forecast-pm {
+    font-size: 0.75rem;
+    color: var(--gray);
+}
+
+/* ===== Pollutant Cards (IQAir style) ===== */
+.pollutant-card {
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem;
+    transition: all 0.3s ease;
+}
+
+.pollutant-card:hover {
+    border-color: var(--blue);
+}
+
+.pollutant-name {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--dark);
+}
+
+.pollutant-desc {
+    font-size: 0.75rem;
+    color: var(--gray);
+    margin-bottom: 0.5rem;
+}
+
+.pollutant-value-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pollutant-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.pollutant-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--dark);
+}
+
+.pollutant-value small {
+    font-weight: 400;
+    color: var(--gray);
+}
+
+/* ===== AQI Circle ===== */
+.aqi-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 5px solid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.aqi-circle-value {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.aqi-circle-label {
+    font-size: 0.75rem;
+    color: var(--gray);
+    font-weight: 600;
+}
+
+.aqi-advice-box {
+    background-color: var(--gray-light);
+    border-radius: 10px;
+    padding: 1rem;
+    font-size: 0.9rem;
+}
+
+.weather-advice-box {
+    background-color: var(--gray-light);
+    border-left: 4px solid var(--blue);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+/* ===== City Ranking ===== */
+.city-aqi-badge {
+    display: inline-block;
+    padding: 0.35rem 0.75rem;
+    border-radius: 8px;
+    color: white;
+    font-weight: 700;
+    font-size: 0.9rem;
+    min-width: 45px;
+    text-align: center;
+}
+
+/* ===== Reminder Card ===== */
+.reminder-card {
+    background-color: var(--gray-light);
+    border-radius: 12px;
+    padding: 1rem;
+    border: 2px solid var(--border);
+}
+
+.reminder-time-badge {
+    background-color: var(--red);
+    color: white;
+    padding: 0.35rem 0.75rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+/* ===== Weather Detail ===== */
+.weather-detail-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+}
+
+@media (max-width: 768px) {
+    .aqi-big-number {
+        font-size: 3rem;
+    }
+    .aqi-weather-row {
+        justify-content: center;
+        margin-top: 1rem;
+    }
+    .forecast-item {
+        min-width: 80px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+    // Initialize Map with better zoom for global view
+    const map = L.map('airMap', {
+        center: [30, 0], // Center more globally
+        zoom: 2,
+        zoomControl: false, // Turn off zoom controls for clean globe look
+        attributionControl: false,
+        dragging: true,
+        scrollWheelZoom: true
+    });
+
+    // Add Tile Layer (Sleek Light Map for better color visibility)
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        subdomains: 'abcd',
+        maxZoom: 19
+    }).addTo(map);
+
+    // Color mapping function
+    function getColor(aqi) {
+        return aqi === 1 ? '#10b981' : // Vibrant Green (Good)
+               aqi === 2 ? '#fbbf24' : // Vibrant Yellow (Moderate)
+               aqi === 3 ? '#f59e0b' : // Vibrant Orange (Sensitive)
+               aqi === 4 ? '#ef4444' : // Vibrant Red (Unhealthy)
+               aqi === 5 ? '#991b1b' : // Deep Red (Very Unhealthy)
+               aqi === 6 ? '#7e22ce' : // Purple (Hazardous)
+                           '#f1f5f9'; // Very light gray for no data
+    }
+
+    // Simple hash function to generate consistent "random" AQI for demo purposes
+    function getDeterministicAQI(str) {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        // Map to 1-5 range with some bias towards better scores
+        const val = Math.abs(hash % 10);
+        if (val < 4) return 1; // Good
+        if (val < 7) return 2; // Moderate
+        if (val < 9) return 3; // Poor
+        return 4; // Very Poor
+    }
+
+    // Styling for territories
+    function style(feature) {
+        let aqi = 0;
+        const name = feature.properties.name?.toLowerCase() || "";
+        
+        // Priority coloring for focus countries
+        if (name === 'uzbekistan') {
+            aqi = {{ air_quality_data.avg_score if air_quality_data else 3 }};
+        } else if (name.includes('korea')) {
+            aqi = 1;
+        } else if (name.includes('china')) {
+            aqi = 4;
+        } else if (name.includes('india')) {
+            aqi = 5;
+        } else if (name.includes('united states')) {
+            aqi = 2;
+        } else {
+            // Color ALL other countries deterministically so the map looks full
+            aqi = getDeterministicAQI(name);
+        }
+        
+        return {
+            fillColor: getColor(aqi),
+            weight: 0.8,
+            opacity: 1,
+            color: '#cbd5e1', // Subtler boundary
+            dashArray: '',
+            fillOpacity: 0.85 // High opacity for "filled" look
+        };
+    }
+
+    // Load GeoJSON for world boundaries
+    fetch('https://raw.githubusercontent.com/datasets/geo-boundaries-world-110m/master/countries.geojson')
+        .then(response => response.json())
+        .then(data => {
+            const geojson = L.geoJson(data, {
+                style: style,
+                onEachFeature: (feature, layer) => {
+                    layer.bindPopup(`<strong>${feature.properties.name}</strong>`);
+                    layer.on({
+                        mouseover: (e) => {
+                            const l = e.target;
+                            l.setStyle({
+                                weight: 2,
+                                color: '#6366f1',
+                                fillOpacity: 0.9
+                            });
+                        },
+                        mouseout: (e) => {
+                            geojson.resetStyle(e.target);
+                        }
+                    });
+                }
+            }).addTo(map);
+        });
+
+    // Marker data for specific cities
+    const cities = [
+        { name: "Tashkent", coords: [41.2995, 69.2401], aqi: {{ air_quality_data.avg_score if air_quality_data else 3 }}, color: getColor({{ air_quality_data.avg_score if air_quality_data else 3 }}) },
+        { name: "Samarkand", coords: [39.627, 66.975], aqi: 2, color: "#fbbf24" },
+        { name: "Bukhara", coords: [39.7747, 64.4286], aqi: 4, color: "#ef4444" },
+        { name: "Seoul", coords: [37.5665, 126.9780], aqi: 1, color: "#10b981" },
+        { name: "New York", coords: [40.7128, -74.0060], aqi: 2, color: "#fbbf24" },
+        { name: "London", coords: [51.5074, -0.1278], aqi: 2, color: "#fbbf24" },
+        { name: "Dubai", coords: [25.2048, 55.2708], aqi: 5, color: "#991b1b" }
+    ];
+
+    cities.forEach(city => {
+        L.circleMarker(city.coords, {
+            radius: 6,
+            fillColor: city.color,
+            color: "#fff",
+            weight: 1.5,
+            opacity: 1,
+            fillOpacity: 0.9
+        }).bindPopup(`<strong>${city.name}</strong><br>Status: ${city.aqi}`).addTo(map);
+    });
+
+    function updateTime() {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        const dateStr = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        const timeEl = document.getElementById('currentTime');
+        const dateEl = document.getElementById('currentDate');
+        if (timeEl) timeEl.textContent = timeStr;
+        if (dateEl) dateEl.textContent = dateStr;
+    }
+
+    updateTime();
+    setInterval(updateTime, 1000);
+</script>
+{% endblock %}
