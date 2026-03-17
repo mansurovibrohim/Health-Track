@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_mail import Mail, Message
+from flask_babel import Babel, _
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 import json
@@ -22,6 +23,20 @@ mail = Mail(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+
+app.config['BABEL_DEFAULT_LOCALE'] = 'en'
+app.config['BABEL_TRANSLATION_DIRECTORIES'] = 'locale'
+
+def get_locale():
+    # if a user is logged in, use the locale from the user settings
+    # otherwise try to guess the language from the user accept
+    # header the browser transmits.  We support uz, ru, en in this
+    # example.  The best match wins.
+    if 'language' in session:
+        return session['language']
+    return request.accept_languages.best_match(['en', 'uz', 'ru'])
+
+babel = Babel(app, locale_selector=get_locale)
 
 # Database Models
 class User(UserMixin, db.Model):
@@ -78,6 +93,12 @@ def admin_required(f):
     return decorated_function
 
 # Routes
+@app.route('/set_language/<language>')
+def set_language(language):
+    if language in ['en', 'uz', 'ru']:
+        session['language'] = language
+    return redirect(request.referrer or url_for('index'))
+
 @app.route('/')
 def index():
     if current_user.is_authenticated:

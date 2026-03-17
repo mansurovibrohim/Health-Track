@@ -462,30 +462,40 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('dashboard') }}">
-                            <i class="fas fa-home"></i> Dashboard
+                            <i class="fas fa-home"></i> {{ _('Dashboard') }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('medications') }}">
-                            <i class="fas fa-pills"></i> Medications
+                            <i class="fas fa-pills"></i> {{ _('Medications') }}
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('profile') }}">
-                            <i class="fas fa-user"></i> Profile
+                            <i class="fas fa-user"></i> {{ _('Profile') }}
                         </a>
                     </li>
                     {% if current_user.is_admin %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('admin_dashboard') }}">
-                            <i class="fas fa-shield-alt"></i> Admin
+                            <i class="fas fa-shield-alt"></i> {{ _('Admin') }}
                         </a>
                     </li>
                     {% endif %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-globe"></i> {{ session.get('language', 'en').upper() }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{{ url_for('set_language', language='en') }}">English</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('set_language', language='uz') }}">O'zbekcha</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('set_language', language='ru') }}">Русский</a></li>
+                        </ul>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('logout') }}">
-                            <i class="fas fa-sign-out-alt"></i> Logout
+                            <i class="fas fa-sign-out-alt"></i> {{ _('Logout') }}
                         </a>
                     </li>
                 </ul>
