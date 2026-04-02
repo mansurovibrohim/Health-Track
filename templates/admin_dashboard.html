@@ -1,14 +1,16 @@
 {% extends "base.html" %}
 
-{% block title %}Admin Dashboard - Health Track{% endblock %}
+{% block title %}{{ _('Admin Dashboard') }} - Health Track{% endblock %}
+
 
 {% block content %}
 <div class="row mb-4">
     <div class="col-12">
         <h1 style="color: var(--red);" class="mb-0">
-            <i class="fas fa-shield-alt"></i> Admin Dashboard
+            <i class="fas fa-shield-alt"></i> {{ _('Admin Dashboard') }}
         </h1>
-        <p class="text-muted mt-2">System administration panel</p>
+        <p class="text-muted mt-2">{{ _('System administration panel') }}</p>
+
     </div>
 </div>
 
@@ -21,7 +23,8 @@
             </div>
             <div class="stat-content">
                 <h3 class="stat-number">{{ total_users }}</h3>
-                <p class="stat-label">Total Users</p>
+                <p class="stat-label">{{ _('Total Users') }}</p>
+
             </div>
         </div>
     </div>
@@ -32,7 +35,8 @@
             </div>
             <div class="stat-content">
                 <h3 class="stat-number">{{ total_medications }}</h3>
-                <p class="stat-label">Total Medications</p>
+                <p class="stat-label">{{ _('Total Medications') }}</p>
+
             </div>
         </div>
     </div>
@@ -43,7 +47,8 @@
             </div>
             <div class="stat-content">
                 <h3 class="stat-number">{{ total_reminders }}</h3>
-                <p class="stat-label">Total Reminders</p>
+                <p class="stat-label">{{ _('Total Reminders') }}</p>
+
             </div>
         </div>
     </div>
@@ -54,8 +59,9 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header" style="background-color: var(--red);">
-                <h5 class="mb-0"><i class="fas fa-bolt"></i> Quick Actions</h5>
+                <h5 class="mb-0"><i class="fas fa-bolt"></i> {{ _('Quick Actions') }}</h5>
             </div>
+
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-3 mb-3">
@@ -63,38 +69,43 @@
                             <div class="quick-action-icon">
                                 <i class="fas fa-users"></i>
                             </div>
-                            <h6>Manage Users</h6>
-                            <p>View and manage all users</p>
+                            <h6>{{ _('Manage Users') }}</h6>
+                            <p>{{ _('View and manage all users') }}</p>
                         </a>
+
                     </div>
                     <div class="col-md-3 mb-3">
-                        <form method="POST" action="{{ url_for('admin_clear_database') }}" onsubmit="return confirm('Are you sure you want to clear all database data? This action cannot be undone!');">
+                        <form method="POST" action="{{ url_for('admin_clear_database') }}" onsubmit="return confirm('{{ _('Are you sure you want to clear all database data? This action cannot be undone!') }}');">
+
                             <button type="submit" class="quick-action-btn w-100" style="border: 2px solid var(--border); background-color: white; cursor: pointer;">
                                 <div class="quick-action-icon" style="color: var(--red);">
                                     <i class="fas fa-trash-alt"></i>
                                 </div>
-                                <h6>Clear Database</h6>
-                                <p>Delete all data (admin preserved)</p>
+                                <h6>{{ _('Clear Database') }}</h6>
+                                <p>{{ _('Delete all data (admin preserved)') }}</p>
                             </button>
                         </form>
+
                     </div>
                     <div class="col-md-3 mb-3">
                         <a href="{{ url_for('dashboard') }}" class="quick-action-btn">
                             <div class="quick-action-icon">
                                 <i class="fas fa-home"></i>
                             </div>
-                            <h6>User Dashboard</h6>
-                            <p>Go to user dashboard</p>
+                            <h6>{{ _('User Dashboard') }}</h6>
+                            <p>{{ _('Go to user dashboard') }}</p>
                         </a>
+
                     </div>
                     <div class="col-md-3 mb-3">
                         <a href="{{ url_for('logout') }}" class="quick-action-btn">
                             <div class="quick-action-icon" style="color: var(--red);">
                                 <i class="fas fa-sign-out-alt"></i>
                             </div>
-                            <h6>Logout</h6>
-                            <p>Logout from admin panel</p>
+                            <h6>{{ _('Logout') }}</h6>
+                            <p>{{ _('Logout from admin panel') }}</p>
                         </a>
+
                     </div>
                 </div>
             </div>
@@ -107,25 +118,27 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0"><i class="fas fa-users"></i> Recent Users</h5>
+                <h5 class="mb-0"><i class="fas fa-users"></i> {{ _('Recent Users') }}</h5>
                 <a href="{{ url_for('admin_users') }}" class="btn btn-light btn-sm">
-                    <i class="fas fa-eye"></i> View All
+                    <i class="fas fa-eye"></i> {{ _('View All') }}
                 </a>
             </div>
+
             <div class="card-body">
                 {% if recent_users %}
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>Username</th>
-                                <th>Email</th>
-                                <th>Country</th>
-                                <th>City</th>
-                                <th>Joined</th>
-                                <th>Actions</th>
+                                <th>{{ _('Username') }}</th>
+                                <th>{{ _('Email') }}</th>
+                                <th>{{ _('Country') }}</th>
+                                <th>{{ _('City') }}</th>
+                                <th>{{ _('Joined') }}</th>
+                                <th>{{ _('Actions') }}</th>
                             </tr>
                         </thead>
+
                         <tbody>
                             {% for user in recent_users %}
                             <tr>
@@ -136,14 +149,16 @@
                                 <td>{{ user.created_at.strftime('%Y-%m-%d') }}</td>
                                 <td>
                                     {% if not user.is_admin %}
-                                    <form method="POST" action="{{ url_for('admin_delete_user', user_id=user.id) }}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                    <form method="POST" action="{{ url_for('admin_delete_user', user_id=user.id) }}" style="display: inline;" onsubmit="return confirm('{{ _('Are you sure you want to delete this user?') }}');">
+
                                         <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="fas fa-trash"></i> Delete
+                                            <i class="fas fa-trash"></i> {{ _('Delete') }}
                                         </button>
                                     </form>
                                     {% else %}
-                                    <span class="badge" style="background-color: var(--blue); color: white;">Admin</span>
+                                    <span class="badge" style="background-color: var(--blue); color: white;">{{ _('Admin') }}</span>
                                     {% endif %}
+
                                 </td>
                             </tr>
                             {% endfor %}
@@ -151,8 +166,9 @@
                     </table>
                 </div>
                 {% else %}
-                <p class="text-muted text-center">No users found</p>
+                <p class="text-muted text-center">{{ _('No users found') }}</p>
                 {% endif %}
+
             </div>
         </div>
     </div>

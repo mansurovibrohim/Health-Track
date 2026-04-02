@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
-{% block title %}Admin Login - Health Track{% endblock %}
+{% block title %}{{ _('Admin Login') }} - Health Track{% endblock %}
+
 
 {% block content %}
 <div class="row justify-content-center align-items-center" style="min-height: 70vh;">
@@ -10,32 +11,37 @@
                 <div class="login-icon mb-3">
                     <i class="fas fa-shield-alt"></i>
                 </div>
-                <h3 class="mb-0">Admin Login</h3>
-                <p class="mb-0 mt-2" style="opacity: 0.9; font-size: 0.9rem;">Administrator access</p>
+                <h3 class="mb-0">{{ _('Admin Login') }}</h3>
+                <p class="mb-0 mt-2" style="opacity: 0.9; font-size: 0.9rem;">{{ _('Administrator access') }}</p>
+
             </div>
             <div class="card-body p-4">
                 <form method="POST" action="{{ url_for('admin_login') }}">
                     <div class="mb-4">
                         <label for="password" class="form-label">
-                            <i class="fas fa-lock"></i> Admin Password
+                            <i class="fas fa-lock"></i> {{ _('Admin Password') }}
                         </label>
+
                         <input type="password" 
                                class="form-control form-control-lg" 
                                id="password" 
                                name="password" 
                                required
-                               placeholder="Enter admin password"
+                               placeholder="{{ _('Enter admin password') }}"
+
                                autocomplete="current-password">
                     </div>
                     <button type="submit" class="btn btn-danger w-100 btn-lg">
-                        <i class="fas fa-sign-in-alt"></i> Login as Admin
+                        <i class="fas fa-sign-in-alt"></i> {{ _('Login as Admin') }}
                     </button>
+
                 </form>
                 <hr class="my-4">
                 <div class="text-center">
                     <a href="{{ url_for('login') }}" style="color: var(--blue);">
-                        <i class="fas fa-arrow-left"></i> Back to User Login
+                        <i class="fas fa-arrow-left"></i> {{ _('Back to User Login') }}
                     </a>
+
                 </div>
             </div>
         </div>

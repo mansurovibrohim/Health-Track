@@ -1,82 +1,95 @@
 {% extends "base.html" %}
 
-{% block title %}Profil - Health Track{% endblock %}
+{% block title %}{{ _('Profile') }} - Health Track{% endblock %}
+
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-8">
         <div class="card">
             <div class="card-header">
-                <h4 class="mb-0"><i class="fas fa-user"></i> Personal account</h4>
+                <h4 class="mb-0"><i class="fas fa-user"></i> {{ _('Personal account') }}</h4>
+
             </div>
             <div class="card-body">
                 <form method="POST" action="{{ url_for('profile') }}">
                     <div class="mb-3">
                         <label class="form-label">
-                            <i class="fas fa-user"></i> Username
+                            <i class="fas fa-user"></i> {{ _('Username') }}
                         </label>
+
                         <input type="text" class="form-control" value="{{ current_user.username }}" disabled
                             style="background-color: var(--gray-light);">
                     </div>
 
                     <div class="mb-3">
                         <label for="email_input" class="form-label">
-                            <i class="fas fa-envelope"></i> Email
+                            <i class="fas fa-envelope"></i> {{ _('Email') }}
                         </label>
+
                         <div class="input-group">
                             <input type="email" class="form-control" id="email_input" name="email"
                                 value="{{ current_user.email }}" readonly style="background-color: var(--gray-light);">
                             <button class="btn btn-outline-primary" type="button" id="editEmailBtn">
-                                <i class="fas fa-edit"></i> Edit
+                                <i class="fas fa-edit"></i> {{ _('Edit') }}
                             </button>
+
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="country" class="form-label">
-                                <i class="fas fa-globe"></i> Country <span class="text-danger">*</span>
+                                <i class="fas fa-globe"></i> {{ _('Country') }} <span class="text-danger">*</span>
                             </label>
+
                             <select class="form-select" id="country" name="country" required onchange="updateCities()">
-                                <option value="">Select...</option>
-                                <option value="UZ" {% if current_user.country=='UZ' %}selected{% endif %}>Uzbekistan</option>
-                                <option value="US" {% if current_user.country=='US' %}selected{% endif %}>USA</option>
-                                <option value="RU" {% if current_user.country=='RU' %}selected{% endif %}>Russia</option>
-                                <option value="KZ" {% if current_user.country=='KZ' %}selected{% endif %}>Kazakhstan</option>
-                                <option value="TJ" {% if current_user.country=='TJ' %}selected{% endif %}>Tajikistan</option>
-                                <option value="KG" {% if current_user.country=='KG' %}selected{% endif %}>Kyrgyzstan</option>
-                                <option value="TM" {% if current_user.country=='TM' %}selected{% endif %}>Turkmenistan</option>
-                                <option value="AF" {% if current_user.country=='AF' %}selected{% endif %}>Afghanistan</option>
-                                <option value="TR" {% if current_user.country=='TR' %}selected{% endif %}>Turkey</option>
-                                <option value="CN" {% if current_user.country=='CN' %}selected{% endif %}>China</option>
+                                <option value="">{{ _('Select...') }}</option>
+                                <option value="UZ" {% if current_user.country=='UZ' %}selected{% endif %}>{{ _('Uzbekistan') }}</option>
+                                <option value="US" {% if current_user.country=='US' %}selected{% endif %}>{{ _('USA') }}</option>
+                                <option value="RU" {% if current_user.country=='RU' %}selected{% endif %}>{{ _('Russia') }}</option>
+                                <option value="KZ" {% if current_user.country=='KZ' %}selected{% endif %}>{{ _('Kazakhstan') }}</option>
+                                <option value="TJ" {% if current_user.country=='TJ' %}selected{% endif %}>{{ _('Tajikistan') }}</option>
+                                <option value="KG" {% if current_user.country=='KG' %}selected{% endif %}>{{ _('Kyrgyzstan') }}</option>
+                                <option value="TM" {% if current_user.country=='TM' %}selected{% endif %}>{{ _('Turkmenistan') }}</option>
+                                <option value="AF" {% if current_user.country=='AF' %}selected{% endif %}>{{ _('Afghanistan') }}</option>
+                                <option value="TR" {% if current_user.country=='TR' %}selected{% endif %}>{{ _('Turkey') }}</option>
+                                <option value="CN" {% if current_user.country=='CN' %}selected{% endif %}>{{ _('China') }}</option>
+
                             </select>
                         </div>
     
                         <div class="col-md-6 mb-3">
                             <label for="city" class="form-label">
-                                <i class="fas fa-city"></i> City / Region <span class="text-danger">*</span>
+                                <i class="fas fa-city"></i> {{ _('City / Region') }} <span class="text-danger">*</span>
                             </label>
+
                             <select class="form-select" id="city" name="city" required>
-                                <option value="{{ current_user.city or '' }}">{{ current_user.city or 'Select country first...' }}</option>
+                                <option value="{{ current_user.city or '' }}">{{ current_user.city or _('Select country first...') }}</option>
+
                             </select>
                         </div>
                     </div>
 
                     <div class="mb-3">
                         <label for="telegram_chat_id" class="form-label">
-                            <i class="fab fa-telegram" style="color: var(--blue);"></i> Telegram Chat ID (Optional)
+                            <i class="fab fa-telegram" style="color: var(--blue);"></i> {{ _('Telegram Chat ID (Optional)') }}
                         </label>
+
                         <div class="input-group mb-2">
                             <input type="text" class="form-control" id="telegram_chat_id" name="telegram_chat_id"
-                                value="{{ current_user.telegram_chat_id or '' }}" placeholder="For example: 123456789">
+                                value="{{ current_user.telegram_chat_id or '' }}" placeholder="{{ _('For example: 123456789') }}">
+
                             <button type="button" class="btn btn-primary" onclick="getChatId()"
-                                title="Get automatically">
-                                <i class="fas fa-magic"></i> Get automatically
+                                title="{{ _('Get automatically') }}">
+                                <i class="fas fa-magic"></i> {{ _('Get automatically') }}
                             </button>
+
                             {% if current_user.telegram_chat_id %}
                             <button type="button" class="btn btn-outline-primary" onclick="testTelegram()">
-                                <i class="fas fa-paper-plane"></i> Test
+                                <i class="fas fa-paper-plane"></i> {{ _('Test') }}
                             </button>
+
                             {% endif %}
                         </div>
                         <div id="chatIdResult" class="alert d-none mb-2"></div>
@@ -85,28 +98,31 @@
                             <div class="mt-2">
                                 <strong>Method 1 (Automatic):</strong>
                                 <ol class="mt-1 mb-2 ps-3">
-                                    <li>Send /start to your bot in Telegram</li>
-                                    <li>Click the <strong>"Get automatically"</strong> button above</li>
-                                    <li>Chat ID will be filled automatically</li>
+                                    <li>{{ _('Send /start to your bot in Telegram') }}</li>
+                                    <li>{{ _('Click the "Get automatically" button above') }}</li>
+                                    <li>{{ _('Chat ID will be filled automatically') }}</li>
                                 </ol>
-                                <strong>Method 2 (Manual):</strong>
+                                <strong>{{ _('Method 2 (Manual):') }}</strong>
                                 <ol class="mt-1 mb-0 ps-3">
-                                    <li>Find @userinfobot in Telegram</li>
-                                    <li>Send /start</li>
-                                    <li>The bot will send you the Chat ID</li>
-                                    <li>Enter this number in the field above</li>
+                                    <li>{{ _('Find @userinfobot in Telegram') }}</li>
+                                    <li>{{ _('Send /start') }}</li>
+                                    <li>{{ _('The bot will send you the Chat ID') }}</li>
+                                    <li>{{ _('Enter this number in the field above') }}</li>
                                 </ol>
+
                             </div>
                         </small>
                     </div>
 
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Save
+                            <i class="fas fa-save"></i> {{ _('Save') }}
                         </button>
+
                         <a href="{{ url_for('test_notifications') }}" class="btn btn-outline-primary">
-                            <i class="fas fa-vial"></i> Test Email & Telegram
+                            <i class="fas fa-vial"></i> {{ _('Test Email & Telegram') }}
                         </a>
+
                     </div>
                 </form>
             </div>
@@ -115,22 +131,25 @@
         <!-- Statistics Card -->
         <div class="card mt-4">
             <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Statistics</h5>
+                <h5 class="mb-0"><i class="fas fa-chart-bar"></i> {{ _('Statistics') }}</h5>
             </div>
+
             <div class="card-body">
                 <div class="row text-center">
                     <div class="col-md-4 mb-3">
                         <div class="p-3">
                             <i class="fas fa-pills fa-3x mb-3" style="color: var(--blue);"></i>
                             <h2 style="color: var(--blue);" class="mb-1">{{ current_user.medications|length }}</h2>
-                            <p class="text-muted mb-0">Total medications</p>
+                            <p class="text-muted mb-0">{{ _('Total medications') }}</p>
+
                         </div>
                     </div>
                     <div class="col-md-4 mb-3">
                         <div class="p-3">
                             <i class="fas fa-calendar fa-3x mb-3" style="color: var(--blue-light);"></i>
                             <h2 style="color: var(--blue-light);" class="mb-1">{{ current_user.created_at.strftime('%d.%m.%Y') }}</h2>
-                            <p class="text-muted mb-0">Registration date</p>
+                            <p class="text-muted mb-0">{{ _('Registration date') }}</p>
+
                         </div>
                     </div>
                     <div class="col-md-4 mb-3">
@@ -138,7 +157,8 @@
                             <i class="fas fa-clock fa-3x mb-3" style="color: var(--red);"></i>
                             <h2 style="color: var(--red);" class="mb-1">{{ (datetime.now().date() -
                                 current_user.created_at.date()).days }}</h2>
-                            <p class="text-muted mb-0">Days</p>
+                            <p class="text-muted mb-0">{{ _('Days') }}</p>
+
                         </div>
                     </div>
                 </div>
@@ -148,31 +168,35 @@
         <!-- Quick Actions -->
         <div class="card mt-4">
             <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-bolt"></i> Quick Actions</h5>
+                <h5 class="mb-0"><i class="fas fa-bolt"></i> {{ _('Quick Actions') }}</h5>
             </div>
+
             <div class="card-body">
                 <div class="row">
 
                     <div class="col-md-4 col-12 mb-4 text-center">
                         <a href="{{ url_for('medications') }}" class="quick-action-btn">
                             <div class="quick-action-icon"><i class="fas fa-pills"></i></div>
-                            <h5 class="mb-2">My Medications</h5>
-                            <p>View and manage all your stored medicines</p>
+                            <h5 class="mb-2">{{ _('My Medications') }}</h5>
+                            <p>{{ _('View and manage all your stored medicines') }}</p>
                         </a>
+
                     </div>
                     <div class="col-md-4 col-12 mb-4 text-center">
                         <a href="{{ url_for('profile') }}" class="quick-action-btn">
                             <div class="quick-action-icon" style="color: var(--red);"><i class="fas fa-user-cog"></i></div>
-                            <h5 class="mb-2">Edit Profile</h5>
-                            <p>Update your personal info and city settings</p>
+                            <h5 class="mb-2">{{ _('Edit Profile') }}</h5>
+                            <p>{{ _('Update your personal info and city settings') }}</p>
                         </a>
+
                     </div>
                     <div class="col-md-4 col-12 mb-4 text-center">
                         <a href="{{ url_for('test_notifications') }}" class="quick-action-btn">
                             <div class="quick-action-icon"><i class="fas fa-paper-plane"></i></div>
-                            <h5 class="mb-2">Test Alerts</h5>
-                            <p>Send a test notification to Telegram or Email</p>
+                            <h5 class="mb-2">{{ _('Test Alerts') }}</h5>
+                            <p>{{ _('Send a test notification to Telegram or Email') }}</p>
                         </a>
+
                     </div>
                 </div>
             </div>
@@ -190,14 +214,16 @@
         citySelect.innerHTML = '<option value="">Loading...</option>';
         
         if (!country) {
-            citySelect.innerHTML = '<option value="">Select country first...</option>';
+            citySelect.innerHTML = '<option value="">{{ _("Select country first...") }}</option>';
             return;
         }
+
         
         fetch(`/api/cities/${country}`)
             .then(response => response.json())
             .then(data => {
-                citySelect.innerHTML = '<option value="">Select city/region...</option>';
+                citySelect.innerHTML = '<option value="">{{ _("Select city/region...") }}</option>';
+
                 data.cities.forEach(city => {
                     const option = document.createElement('option');
                     option.value = city;
@@ -207,8 +233,9 @@
             })
             .catch(error => {
                 console.error('Error fetching cities:', error);
-                citySelect.innerHTML = '<option value="">Error loading cities</option>';
+                citySelect.innerHTML = '<option value="">{{ _("Error loading cities") }}</option>';
             });
+
     }
 
     // Trigger updateCities on load to populate the city dropdown if country is already selected
@@ -220,7 +247,8 @@
                 .then(response => response.json())
                 .then(data => {
                     const citySelect = document.getElementById('city');
-                    citySelect.innerHTML = '<option value="">Select city/region...</option>';
+                    citySelect.innerHTML = '<option value="">{{ _("Select city/region...") }}</option>';
+
                     data.cities.forEach(city => {
                         const option = document.createElement('option');
                         option.value = city;
@@ -238,22 +266,24 @@
             emailInput.removeAttribute('readonly');
             emailInput.style.backgroundColor = 'white';
             emailInput.focus();
-            this.innerHTML = '<i class="fas fa-times"></i> Cancel';
+            this.innerHTML = '<i class="fas fa-times"></i> {{ _("Cancel") }}';
             this.classList.remove('btn-outline-primary');
             this.classList.add('btn-danger');
         } else {
             emailInput.setAttribute('readonly', 'true');
             emailInput.style.backgroundColor = 'var(--gray-light)';
             emailInput.value = '{{ current_user.email }}';
-            this.innerHTML = '<i class="fas fa-edit"></i> Edit';
+            this.innerHTML = '<i class="fas fa-edit"></i> {{ _("Edit") }}';
+
             this.classList.remove('btn-danger');
             this.classList.add('btn-outline-primary');
         }
     });
 
     function testTelegram() {
-        if (confirm('Should a test message be sent?')) {
+        if (confirm('{{ _("Should a test message be sent?") }}')) {
             fetch('{{ url_for("test_telegram") }}', {
+
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -270,7 +300,9 @@
     function getChatId() {
         const resultDiv = document.getElementById('chatIdResult');
         resultDiv.className = 'alert alert-info d-block mb-2';
-        resultDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Getting Chat ID...';
+        resultDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> {{ _("Getting Chat ID...") }}';
+
+
 
         fetch('{{ url_for("get_chat_id") }}')
             .then(response => response.json())
@@ -279,28 +311,31 @@
                     document.getElementById('telegram_chat_id').value = data.chat_id;
                     resultDiv.className = 'alert alert-success d-block mb-2';
                     resultDiv.innerHTML = `
-                    <i class="fas fa-check-circle"></i> <strong>Chat ID found!</strong><br>
+                    <i class="fas fa-check-circle"></i> <strong>{{ _('Chat ID found!') }}</strong><br>
                     Chat ID: <code>${data.chat_id}</code><br>
                     Username: ${data.username || data.first_name || 'Unknown'}<br>
-                    <small>Now click the "Save" button.</small>
+                    <small>{{ _('Now click the "Save" button.') }}</small>
                 `;
+
                 } else {
                     resultDiv.className = 'alert alert-warning d-block mb-2';
                     resultDiv.innerHTML = `
-                    <i class="fas fa-exclamation-triangle"></i> <strong>Error:</strong><br>
+                    <i class="fas fa-exclamation-triangle"></i> <strong>{{ _('Error:') }}</strong><br>
                     ${data.message}<br>
-                    <small>Please send /start to your bot in Telegram and try again.</small>
+                    <small>{{ _('Please send /start to your bot in Telegram and try again.') }}</small>
                 `;
+
                 }
             })
             .catch(error => {
                 resultDiv.className = 'alert alert-danger d-block mb-2';
                 resultDiv.innerHTML = `
-                <i class="fas fa-times-circle"></i> <strong>Error:</strong><br>
+                <i class="fas fa-times-circle"></i> <strong>{{ _('Error:') }}</strong><br>
                 ${error.message}<br>
-                <small>Check the Bot Token or enter manually.</small>
+                <small>{{ _('Check the Bot Token or enter manually.') }}</small>
             `;
             });
+
     }
 
 </script>

@@ -1,32 +1,35 @@
 {% extends "base.html" %}
 
-{% block title %}Add Medication - Health Track{% endblock %}
+{% block title %}{{ _('Add Medication') }} - Health Track{% endblock %}
+
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-8">
         <div class="card">
             <div class="card-header">
-                <h4 class="mb-0"><i class="fas fa-plus-circle"></i> Add new medication</h4>
+                <h4 class="mb-0"><i class="fas fa-plus-circle"></i> {{ _('Add new medication') }}</h4>
             </div>
+
             <div class="card-body">
                 <form method="POST" action="{{ url_for('add_medication') }}" id="medicationForm">
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="name" class="form-label">
-                                <i class="fas fa-pills"></i> Medication name <span class="text-danger">*</span>
+                                <i class="fas fa-pills"></i> {{ _('Medication name') }} <span class="text-danger">*</span>
                             </label>
                             <input type="text" 
                                    class="form-control" 
                                    id="name" 
                                    name="name" 
                                    required
-                                   placeholder="For example: Aspirin">
+                                   placeholder="{{ _('For example: Aspirin') }}">
                         </div>
+
                         
                         <div class="col-md-6 mb-3">
                             <label for="quantity_remaining" class="form-label">
-                                <i class="fas fa-capsules"></i> Remaining quantity (pieces) <span class="text-danger">*</span>
+                                <i class="fas fa-capsules"></i> {{ _('Remaining quantity (pieces)') }} <span class="text-danger">*</span>
                             </label>
                             <input type="number" 
                                    class="form-control" 
@@ -34,14 +37,15 @@
                                    name="quantity_remaining" 
                                    required
                                    min="1"
-                                   placeholder="For example: 30">
+                                   placeholder="{{ _('For example: 30') }}">
                         </div>
+
                     </div>
                     
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="quantity_per_dose" class="form-label">
-                                <i class="fas fa-tablets"></i> Quantity per dose (pieces) <span class="text-danger">*</span>
+                                <i class="fas fa-tablets"></i> {{ _('Quantity per dose (pieces)') }} <span class="text-danger">*</span>
                             </label>
                             <input type="number" 
                                    class="form-control" 
@@ -49,13 +53,15 @@
                                    name="quantity_per_dose" 
                                    required
                                    min="1"
-                                   placeholder="For example: 1">
+                                   placeholder="{{ _('For example: 1') }}">
                         </div>
+
                         
                         <div class="col-md-6 mb-3">
                             <label for="expiration_date" class="form-label">
-                                <i class="fas fa-calendar-times"></i> Expiration date <span class="text-danger">*</span>
+                                <i class="fas fa-calendar-times"></i> {{ _('Expiration date') }} <span class="text-danger">*</span>
                             </label>
+
                             <input type="date" 
                                    class="form-control" 
                                    id="expiration_date" 
@@ -66,31 +72,36 @@
                     
                     <div class="mb-3">
                         <label for="description" class="form-label">
-                            <i class="fas fa-info-circle"></i> Description (Optional)
+                            <i class="fas fa-info-circle"></i> {{ _('Description (Optional)') }}
                         </label>
+
                         <textarea class="form-control" 
                                   id="description" 
                                   name="description" 
                                   rows="3"
-                                  placeholder="Additional information about the medication..."></textarea>
+                                  placeholder="{{ _('Additional information about the medication...') }}"></textarea>
                     </div>
+
                     
                     <div class="mb-3">
                         <label for="times_per_day" class="form-label">
-                            <i class="fas fa-clock"></i> How many times per day? <span class="text-danger">*</span>
+                            <i class="fas fa-clock"></i> {{ _('How many times per day?') }} <span class="text-danger">*</span>
                         </label>
+
                         <select class="form-select" id="times_per_day" name="times_per_day" required onchange="updateReminderTimes()">
-                            <option value="1">1 time</option>
-                            <option value="2">2 times</option>
-                            <option value="3">3 times</option>
-                            <option value="4">4 times</option>
+                            <option value="1">1 {{ _('time') }}</option>
+                            <option value="2">2 {{ _('times') }}</option>
+                            <option value="3">3 {{ _('times') }}</option>
+                            <option value="4">4 {{ _('times') }}</option>
                         </select>
                     </div>
+
                     
                     <div class="mb-4" id="reminderTimesContainer">
                         <label class="form-label">
-                            <i class="fas fa-bell"></i> Reminder times <span class="text-danger">*</span>
+                            <i class="fas fa-bell"></i> {{ _('Reminder times') }} <span class="text-danger">*</span>
                         </label>
+
                         <div id="reminderTimesList">
                             <div class="mb-2">
                                 <input type="time" 
@@ -103,12 +114,13 @@
                     
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-primary btn-lg">
-                            <i class="fas fa-save"></i> Save
+                            <i class="fas fa-save"></i> {{ _('Save') }}
                         </button>
                         <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
-                            <i class="fas fa-times"></i> Cancel
+                            <i class="fas fa-times"></i> {{ _('Cancel') }}
                         </a>
                     </div>
+
                 </form>
             </div>
         </div>
@@ -127,7 +139,8 @@ function updateReminderTimes() {
         const div = document.createElement('div');
         div.className = 'mb-2';
         div.innerHTML = `
-            <label class="form-label small">${i + 1}-reminder time:</label>
+            <label class="form-label small">${i + 1}-{{ _("reminder time:") }}</label>
+
             <input type="time" 
                    class="form-control" 
                    name="reminder_time_${i}" 

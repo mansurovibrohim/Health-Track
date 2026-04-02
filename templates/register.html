@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
-{% block title %}Register - Health Track{% endblock %}
+{% block title %}{{ _('Register') }} - Health Track{% endblock %}
+
 
 {% block content %}
 <div class="row justify-content-center align-items-center" style="min-height: 70vh;">
@@ -10,60 +11,70 @@
                 <div class="login-icon mb-3">
                     <i class="fas fa-user-plus"></i>
                 </div>
-                <h3 class="mb-0">Register</h3>
-                <p class="mb-0 mt-2" style="opacity: 0.9; font-size: 0.9rem;">Create a new account and get started</p>
+                <h3 class="mb-0">{{ _('Register') }}</h3>
+                <p class="mb-0 mt-2" style="opacity: 0.9; font-size: 0.9rem;">{{ _('Create a new account and get started') }}</p>
+
             </div>
             <div class="card-body p-4">
                 <form method="POST" action="{{ url_for('register') }}" id="registerForm">
                     <div class="mb-4">
                         <label for="username" class="form-label">
-                            <i class="fas fa-user"></i> Username
+                            <i class="fas fa-user"></i> {{ _('Username') }}
                         </label>
+
                         <input type="text" 
                                class="form-control form-control-lg" 
                                id="username" 
                                name="username" 
                                required
-                               placeholder="Enter your username"
+                               placeholder="{{ _('Enter your username') }}"
+
                                autocomplete="username">
                     </div>
                     <div class="mb-4">
                         <label for="email" class="form-label">
-                            <i class="fas fa-envelope"></i> Email
+                            <i class="fas fa-envelope"></i> {{ _('Email') }}
                         </label>
+
                         <input type="email" 
                                class="form-control form-control-lg" 
                                id="email" 
                                name="email" 
                                required
-                               placeholder="Enter your email"
+                               placeholder="{{ _('Enter your email') }}"
+
                                autocomplete="email">
                     </div>
                     <div class="mb-4">
                         <label for="password" class="form-label">
-                            <i class="fas fa-lock"></i> Password
+                            <i class="fas fa-lock"></i> {{ _('Password') }}
                         </label>
+
                         <input type="password" 
                                class="form-control form-control-lg" 
                                id="password" 
                                name="password" 
                                required 
                                minlength="6"
-                               placeholder="At least 6 characters"
+                               placeholder="{{ _('At least 6 characters') }}"
+
                                autocomplete="new-password">
                         <small class="text-muted d-block mt-2">
-                            <i class="fas fa-info-circle"></i> Password must be at least 6 characters
+                            <i class="fas fa-info-circle"></i> {{ _('Password must be at least 6 characters') }}
                         </small>
+
                     </div>
                     <button type="submit" class="btn btn-primary w-100 btn-lg">
-                        <i class="fas fa-user-plus"></i> Register
+                        <i class="fas fa-user-plus"></i> {{ _('Register') }}
                     </button>
+
                 </form>
                 <hr class="my-4">
                 <div class="text-center">
-                    <p class="mb-0">Already have an account? 
-                        <a href="{{ url_for('login') }}" class="fw-bold" style="color: var(--blue);">Login</a>
+                    <p class="mb-0">{{ _('Already have an account?') }} 
+                        <a href="{{ url_for('login') }}" class="fw-bold" style="color: var(--blue);">{{ _('Login') }}</a>
                     </p>
+
                 </div>
             </div>
         </div>

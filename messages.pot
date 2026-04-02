@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-03-17 23:41+0500\n"
+"POT-Creation-Date: 2026-04-02 10:20+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,24 +17,499 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: templates/base.html:465
-msgid "Dashboard"
+#: app.py:90
+msgid "Access denied. Admin privileges required."
 msgstr ""
 
-#: templates/base.html:470
-msgid "Medications"
+#: app.py:121
+msgid "Admin login successful"
 msgstr ""
 
-#: templates/base.html:476
-msgid "Profile"
+#: app.py:129
+msgid "Invalid email or password"
 msgstr ""
 
-#: templates/base.html:482
+#: app.py:142
+msgid "Username already exists"
+msgstr ""
+
+#: app.py:147
+msgid "Email already exists"
+msgstr ""
+
+#: app.py:161
+msgid "Registration successful! You have been logged in automatically."
+msgstr ""
+
+#: app.py:178
+msgid "Country and city selected successfully!"
+msgstr ""
+
+#: app.py:282
+msgid "Medication added successfully!"
+msgstr ""
+
+#: app.py:325
+msgid "This email is already registered with another account."
+msgstr ""
+
+#: app.py:335
+#, python-format
+msgid "✅ Hello %(username)s! Telegram bot is working. Chat ID: %(chat_id)s"
+msgstr ""
+
+#: app.py:343
+msgid "Profile updated successfully!"
+msgstr ""
+
+#: app.py:354
+msgid "Telegram Chat ID not entered!"
+msgstr ""
+
+#: app.py:358
+#, python-format
+msgid ""
+"🧪 Test Message!\n"
+"\n"
+"Hello %(username)s!\n"
+"This is a test message. If you see this, the bot is working correctly! ✅"
+msgstr ""
+
+#: app.py:363
+msgid "Test message sent! Check Telegram."
+msgstr ""
+
+#: app.py:365
+msgid "Message not sent! Check Chat ID and Bot Token."
+msgstr ""
+
+#: app.py:377
+msgid "Health Track: Test Notification"
+msgstr ""
+
+#: app.py:378
+#, python-format
+msgid ""
+"Hello %(username)s!\n"
+"This is a manual test of your email notification system."
+msgstr ""
+
+#: app.py:384
+#, python-format
+msgid ""
+"🧪 Health Track Test!\n"
+"\n"
+"Hello %(username)s!\n"
+"If you see this, your Telegram notifications are working correctly! ✅"
+msgstr ""
+
+#: app.py:389
+msgid "Test notifications sent! Check your email and Telegram."
+msgstr ""
+
+#: app.py:391
+msgid "Email sent, but Telegram failed (check Chat ID or Bot Token)."
+msgstr ""
+
+#: app.py:393
+msgid "Telegram sent, but Email failed (check SMTP settings)."
+msgstr ""
+
+#: app.py:395
+msgid "Both Email and Telegram notifications failed configuration."
+msgstr ""
+
+#: app.py:406
+msgid "Telegram Bot Token not found! Add TELEGRAM_BOT_TOKEN to .env file."
+msgstr ""
+
+#: app.py:463
+msgid "Logged out successfully"
+msgstr ""
+
+#: app.py:530
+#, python-format
+msgid "User %(username)s deleted successfully"
+msgstr ""
+
+#: app.py:549
+msgid "Database cleared successfully (admin user preserved)"
+msgstr ""
+
+#: app.py:551
+#, python-format
+msgid "Error clearing database: %(error)s"
+msgstr ""
+
+#: app.py:564
+msgid "Clear"
+msgstr ""
+
+#: app.py:564
+msgid "Mainly Cloudy"
+msgstr ""
+
+#: app.py:564
+msgid "Rain"
+msgstr ""
+
+#: app.py:564
+msgid "Snow"
+msgstr ""
+
+#: app.py:630
+msgid "Very cold! Wear warm clothes and stay outside for short periods."
+msgstr ""
+
+#: app.py:632
+msgid "Cold weather. Wear warm clothes."
+msgstr ""
+
+#: app.py:634
+msgid "Very hot! Drink plenty of water and avoid direct sunlight."
+msgstr ""
+
+#: app.py:636
+msgid "Hot weather. Drink plenty of water and wear light clothing."
+msgstr ""
+
+#: app.py:638
+msgid "Comfortable weather. Great time for outdoor activities!"
+msgstr ""
+
+#: app.py:642
+msgid "It's raining. Take an umbrella and avoid getting wet."
+msgstr ""
+
+#: app.py:644
+msgid "It's snowing. Be careful and avoid slippery surfaces."
+msgstr ""
+
+#: app.py:646
+msgid "Foggy. Visibility is limited, be cautious."
+msgstr ""
+
+#: app.py:650
+msgid "High humidity. Breathing may be difficult."
+msgstr ""
+
+#: app.py:652
+msgid "Dry air. Drink plenty of water and moisturize your skin."
+msgstr ""
+
+#: app.py:656
+msgid "Strong wind. Be careful and secure loose items."
+msgstr ""
+
+#: app.py:658
+msgid "Normal weather. Regular walking is recommended for health."
+msgstr ""
+
+#: app.py:740 templates/dashboard.html:193
+msgid "Good"
+msgstr ""
+
+#: app.py:740 templates/dashboard.html:194
+msgid "Moderate"
+msgstr ""
+
+#: app.py:740
+msgid "Unhealthy for Sensitive Groups"
+msgstr ""
+
+#: app.py:740
+msgid "Unhealthy"
+msgstr ""
+
+#: app.py:740
+msgid "Very Unhealthy"
+msgstr ""
+
+#: app.py:745
+msgid "Air quality is satisfactory, and air pollution poses little or no risk."
+msgstr ""
+
+#: app.py:746
+msgid ""
+"Air quality is acceptable. However, there may be a risk for some people, "
+"particularly those who are unusually sensitive to air pollution."
+msgstr ""
+
+#: app.py:747
+msgid ""
+"Members of sensitive groups may experience health effects. The general "
+"public is less likely to be affected."
+msgstr ""
+
+#: app.py:748
+msgid ""
+"Some members of the general public may experience health effects; members"
+" of sensitive groups may experience more serious health effects."
+msgstr ""
+
+#: app.py:749
+msgid "Health alert: The risk of health effects is increased for everyone."
+msgstr ""
+
+#: templates/add_medication.html:3
+msgid "Add Medication"
+msgstr ""
+
+#: templates/add_medication.html:11 templates/medications.html:14
+msgid "Add new medication"
+msgstr ""
+
+#: templates/add_medication.html:19
+msgid "Medication name"
+msgstr ""
+
+#: templates/add_medication.html:26
+msgid "For example: Aspirin"
+msgstr ""
+
+#: templates/add_medication.html:32
+msgid "Remaining quantity (pieces)"
+msgstr ""
+
+#: templates/add_medication.html:40
+msgid "For example: 30"
+msgstr ""
+
+#: templates/add_medication.html:48
+msgid "Quantity per dose (pieces)"
+msgstr ""
+
+#: templates/add_medication.html:56
+msgid "For example: 1"
+msgstr ""
+
+#: templates/add_medication.html:62
+msgid "Expiration date"
+msgstr ""
+
+#: templates/add_medication.html:75 templates/medications.html:130
+#: templates/medications.html:197
+msgid "Description (Optional)"
+msgstr ""
+
+#: templates/add_medication.html:82
+msgid "Additional information about the medication..."
+msgstr ""
+
+#: templates/add_medication.html:88
+msgid "How many times per day?"
+msgstr ""
+
+#: templates/add_medication.html:92 templates/medications.html:137
+#: templates/medications.html:204
+msgid "time"
+msgstr ""
+
+#: templates/add_medication.html:93 templates/add_medication.html:94
+#: templates/add_medication.html:95 templates/medications.html:138
+#: templates/medications.html:139 templates/medications.html:140
+#: templates/medications.html:205 templates/medications.html:206
+#: templates/medications.html:207
+msgid "times"
+msgstr ""
+
+#: templates/add_medication.html:102
+msgid "Reminder times"
+msgstr ""
+
+#: templates/add_medication.html:117 templates/profile.html:119
+#: templates/select_country.html:47
+msgid "Save"
+msgstr ""
+
+#: templates/add_medication.html:120 templates/profile.html:269
+msgid "Cancel"
+msgstr ""
+
+#: templates/add_medication.html:142
+msgid "reminder time:"
+msgstr ""
+
+#: templates/admin_dashboard.html:3 templates/admin_dashboard.html:10
+msgid "Admin Dashboard"
+msgstr ""
+
+#: templates/admin_dashboard.html:12
+msgid "System administration panel"
+msgstr ""
+
+#: templates/admin_dashboard.html:26
+msgid "Total Users"
+msgstr ""
+
+#: templates/admin_dashboard.html:38
+msgid "Total Medications"
+msgstr ""
+
+#: templates/admin_dashboard.html:50
+msgid "Total Reminders"
+msgstr ""
+
+#: templates/admin_dashboard.html:62 templates/profile.html:171
+msgid "Quick Actions"
+msgstr ""
+
+#: templates/admin_dashboard.html:72 templates/admin_users.html:3
+#: templates/admin_users.html:11
+msgid "Manage Users"
+msgstr ""
+
+#: templates/admin_dashboard.html:73
+msgid "View and manage all users"
+msgstr ""
+
+#: templates/admin_dashboard.html:78
+msgid ""
+"Are you sure you want to clear all database data? This action cannot be "
+"undone!"
+msgstr ""
+
+#: templates/admin_dashboard.html:84
+msgid "Clear Database"
+msgstr ""
+
+#: templates/admin_dashboard.html:85
+msgid "Delete all data (admin preserved)"
+msgstr ""
+
+#: templates/admin_dashboard.html:95
+msgid "User Dashboard"
+msgstr ""
+
+#: templates/admin_dashboard.html:96
+msgid "Go to user dashboard"
+msgstr ""
+
+#: templates/admin_dashboard.html:105 templates/base.html:499
+msgid "Logout"
+msgstr ""
+
+#: templates/admin_dashboard.html:106
+msgid "Logout from admin panel"
+msgstr ""
+
+#: templates/admin_dashboard.html:121
+msgid "Recent Users"
+msgstr ""
+
+#: templates/admin_dashboard.html:123
+msgid "View All"
+msgstr ""
+
+#: templates/admin_dashboard.html:133 templates/admin_users.html:35
+#: templates/profile.html:18 templates/register.html:22
+msgid "Username"
+msgstr ""
+
+#: templates/admin_dashboard.html:134 templates/admin_users.html:36
+#: templates/login.html:22 templates/profile.html:27 templates/register.html:36
+msgid "Email"
+msgstr ""
+
+#: templates/admin_dashboard.html:135 templates/admin_users.html:37
+#: templates/profile.html:43 templates/select_country.html:18
+msgid "Country"
+msgstr ""
+
+#: templates/admin_dashboard.html:136 templates/admin_users.html:38
+msgid "City"
+msgstr ""
+
+#: templates/admin_dashboard.html:137 templates/admin_users.html:41
+msgid "Joined"
+msgstr ""
+
+#: templates/admin_dashboard.html:138 templates/admin_users.html:42
+msgid "Actions"
+msgstr ""
+
+#: templates/admin_dashboard.html:152
+msgid "Are you sure you want to delete this user?"
+msgstr ""
+
+#: templates/admin_dashboard.html:155 templates/admin_users.html:68
+#: templates/medications.html:43
+msgid "Delete"
+msgstr ""
+
+#: templates/admin_dashboard.html:159 templates/admin_users.html:3
+#: templates/admin_users.html:53 templates/base.html:483
 msgid "Admin"
 msgstr ""
 
-#: templates/base.html:498
-msgid "Logout"
+#: templates/admin_dashboard.html:169 templates/admin_users.html:83
+msgid "No users found"
+msgstr ""
+
+#: templates/admin_login.html:3 templates/admin_login.html:14
+#: templates/login.html:61
+msgid "Admin Login"
+msgstr ""
+
+#: templates/admin_login.html:15
+msgid "Administrator access"
+msgstr ""
+
+#: templates/admin_login.html:22
+msgid "Admin Password"
+msgstr ""
+
+#: templates/admin_login.html:30
+msgid "Enter admin password"
+msgstr ""
+
+#: templates/admin_login.html:35
+msgid "Login as Admin"
+msgstr ""
+
+#: templates/admin_login.html:42
+msgid "Back to User Login"
+msgstr ""
+
+#: templates/admin_users.html:14
+msgid "Back to Dashboard"
+msgstr ""
+
+#: templates/admin_users.html:25
+msgid "All Users"
+msgstr ""
+
+#: templates/admin_users.html:34
+msgid "ID"
+msgstr ""
+
+#: templates/admin_users.html:39
+msgid "Telegram ID"
+msgstr ""
+
+#: templates/admin_users.html:40 templates/base.html:471
+#: templates/medications.html:3
+msgid "Medications"
+msgstr ""
+
+#: templates/admin_users.html:65
+msgid "Are you sure you want to delete user"
+msgstr ""
+
+#: templates/admin_users.html:65
+msgid "This will also delete all their medications and reminders!"
+msgstr ""
+
+#: templates/admin_users.html:73
+msgid "Cannot delete"
+msgstr ""
+
+#: templates/base.html:466
+msgid "Dashboard"
+msgstr ""
+
+#: templates/base.html:477 templates/profile.html:3
+msgid "Profile"
 msgstr ""
 
 #: templates/dashboard.html:11
@@ -45,32 +520,497 @@ msgstr ""
 msgid "Your personal health tracking dashboard"
 msgstr ""
 
-#: templates/dashboard.html:73
-msgid "Hourly AQI Forecast"
+#: templates/dashboard.html:37
+msgid "Main pollutant:"
 msgstr ""
 
-#: templates/dashboard.html:73 templates/dashboard.html:98
-msgid "your city"
-msgstr ""
-
-#: templates/dashboard.html:98
+#: templates/dashboard.html:74
 msgid "Air Pollutants"
 msgstr ""
 
-#: templates/dashboard.html:382
+#: templates/dashboard.html:74
+msgid "your city"
+msgstr ""
+
+#: templates/dashboard.html:81
+msgid "Fine particles (≤ 2.5 μm)"
+msgstr ""
+
+#: templates/dashboard.html:91
+msgid "Coarse particles (≤ 10 μm)"
+msgstr ""
+
+#: templates/dashboard.html:101
+msgid "Ozone"
+msgstr ""
+
+#: templates/dashboard.html:111
+msgid "Sulfur dioxide"
+msgstr ""
+
+#: templates/dashboard.html:121
+msgid "Carbon monoxide"
+msgstr ""
+
+#: templates/dashboard.html:131
+msgid "Pollen/Dust Level"
+msgstr ""
+
+#: templates/dashboard.html:163
+msgid "Weather Advice:"
+msgstr ""
+
+#: templates/dashboard.html:178
+msgid "Global Air Quality Map"
+msgstr ""
+
+#: templates/dashboard.html:186
+msgid "Live Forecast"
+msgstr ""
+
+#: templates/dashboard.html:195
+msgid "Poor"
+msgstr ""
+
+#: templates/dashboard.html:196
+msgid "Very Poor"
+msgstr ""
+
+#: templates/dashboard.html:210
+msgid "Live most polluted city ranking"
+msgstr ""
+
+#: templates/dashboard.html:211 templates/dashboard.html:257
+msgid "Real-time"
+msgstr ""
+
+#: templates/dashboard.html:211
+msgid "most polluted city ranking"
+msgstr ""
+
+#: templates/dashboard.html:216 templates/dashboard.html:262
+msgid "Cities"
+msgstr ""
+
+#: templates/dashboard.html:217 templates/dashboard.html:263
+msgid "AQI US"
+msgstr ""
+
+#: templates/dashboard.html:241
+msgid "most polluted city"
+msgstr ""
+
+#: templates/dashboard.html:256
+msgid "Live cleanest city ranking"
+msgstr ""
+
+#: templates/dashboard.html:257
+msgid "cleanest city ranking"
+msgstr ""
+
+#: templates/dashboard.html:287
+msgid "cleanest city"
+msgstr ""
+
+#: templates/dashboard.html:306
+msgid "Weather"
+msgstr ""
+
+#: templates/dashboard.html:316
+msgid "Feels like:"
+msgstr ""
+
+#: templates/dashboard.html:317
+msgid "Humidity:"
+msgstr ""
+
+#: templates/dashboard.html:318
+msgid "Wind:"
+msgstr ""
+
+#: templates/dashboard.html:322
+msgid "Advice:"
+msgstr ""
+
+#: templates/dashboard.html:340
+msgid "Set your city to see weather and air quality"
+msgstr ""
+
+#: templates/dashboard.html:341
+msgid "Go to your profile and select a country and city."
+msgstr ""
+
+#: templates/dashboard.html:343
+msgid "Go to Profile"
+msgstr ""
+
+#: templates/dashboard.html:358 templates/profile.html:143
 msgid "Total medications"
 msgstr ""
 
-#: templates/dashboard.html:391
+#: templates/dashboard.html:367 templates/medications.html:57
 msgid "Active"
 msgstr ""
 
-#: templates/dashboard.html:400
+#: templates/dashboard.html:376
 msgid "Low stock"
 msgstr ""
 
-#: templates/dashboard.html:409
+#: templates/dashboard.html:385
 msgid "Today's reminders"
+msgstr ""
+
+#: templates/dashboard.html:391 templates/dashboard.html:397
+msgid "Upcoming Reminders"
+msgstr ""
+
+#: templates/dashboard.html:406
+msgid "pill(s)"
+msgstr ""
+
+#: templates/login.html:3 templates/login.html:14 templates/login.html:49
+#: templates/register.html:75
+msgid "Login"
+msgstr ""
+
+#: templates/login.html:15
+msgid "Welcome to your health tracking platform"
+msgstr ""
+
+#: templates/login.html:30 templates/register.html:44
+msgid "Enter your email"
+msgstr ""
+
+#: templates/login.html:36 templates/register.html:50
+msgid "Password"
+msgstr ""
+
+#: templates/login.html:44
+msgid "Enter your password"
+msgstr ""
+
+#: templates/login.html:55
+msgid "Don't have an account?"
+msgstr ""
+
+#: templates/login.html:56 templates/register.html:3 templates/register.html:14
+#: templates/register.html:68
+msgid "Register"
+msgstr ""
+
+#: templates/medications.html:11
+msgid "My medications"
+msgstr ""
+
+#: templates/medications.html:37 templates/profile.html:34
+#: templates/profile.html:276
+msgid "Edit"
+msgstr ""
+
+#: templates/medications.html:41
+msgid "Are you sure you want to delete this medication?"
+msgstr ""
+
+#: templates/medications.html:53
+msgid "Expired"
+msgstr ""
+
+#: templates/medications.html:55
+msgid "Low Stock"
+msgstr ""
+
+#: templates/medications.html:63
+msgid "pcs"
+msgstr ""
+
+#: templates/medications.html:66
+msgid "daily"
+msgstr ""
+
+#: templates/medications.html:70
+msgid "Exp:"
+msgstr ""
+
+#: templates/medications.html:84
+msgid "No medications added yet"
+msgstr ""
+
+#: templates/medications.html:85
+msgid "Add and save your first medication"
+msgstr ""
+
+#: templates/medications.html:87
+msgid "Add your first medication"
+msgstr ""
+
+#: templates/medications.html:101
+msgid "Add New Medication"
+msgstr ""
+
+#: templates/medications.html:102 templates/medications.html:169
+msgid "Close"
+msgstr ""
+
+#: templates/medications.html:109 templates/medications.html:176
+msgid "Medication name *"
+msgstr ""
+
+#: templates/medications.html:110
+msgid "e.g. Aspirin"
+msgstr ""
+
+#: templates/medications.html:113 templates/medications.html:180
+msgid "Remaining quantity (pcs) *"
+msgstr ""
+
+#: templates/medications.html:114
+msgid "e.g. 30"
+msgstr ""
+
+#: templates/medications.html:120 templates/medications.html:187
+msgid "Quantity per dose (pcs) *"
+msgstr ""
+
+#: templates/medications.html:124 templates/medications.html:191
+msgid "Expiration date *"
+msgstr ""
+
+#: templates/medications.html:135 templates/medications.html:202
+msgid "How many times per day? *"
+msgstr ""
+
+#: templates/medications.html:145 templates/medications.html:212
+msgid "Reminder times *"
+msgstr ""
+
+#: templates/medications.html:154
+msgid "Save Medication"
+msgstr ""
+
+#: templates/medications.html:168
+msgid "Edit Medication"
+msgstr ""
+
+#: templates/medications.html:219
+msgid "Update Medication"
+msgstr ""
+
+#: templates/profile.html:11
+msgid "Personal account"
+msgstr ""
+
+#: templates/profile.html:47
+msgid "Select..."
+msgstr ""
+
+#: templates/profile.html:48 templates/select_country.html:23
+msgid "Uzbekistan"
+msgstr ""
+
+#: templates/profile.html:49 templates/select_country.html:24
+msgid "USA"
+msgstr ""
+
+#: templates/profile.html:50 templates/select_country.html:25
+msgid "Russia"
+msgstr ""
+
+#: templates/profile.html:51 templates/select_country.html:26
+msgid "Kazakhstan"
+msgstr ""
+
+#: templates/profile.html:52 templates/select_country.html:27
+msgid "Tajikistan"
+msgstr ""
+
+#: templates/profile.html:53 templates/select_country.html:28
+msgid "Kyrgyzstan"
+msgstr ""
+
+#: templates/profile.html:54 templates/select_country.html:29
+msgid "Turkmenistan"
+msgstr ""
+
+#: templates/profile.html:55 templates/select_country.html:30
+msgid "Afghanistan"
+msgstr ""
+
+#: templates/profile.html:56 templates/select_country.html:31
+msgid "Turkey"
+msgstr ""
+
+#: templates/profile.html:57 templates/select_country.html:32
+msgid "China"
+msgstr ""
+
+#: templates/profile.html:64 templates/select_country.html:38
+msgid "City / Region"
+msgstr ""
+
+#: templates/profile.html:68 templates/profile.html:217
+#: templates/select_country.html:42 templates/select_country.html:65
+msgid "Select country first..."
+msgstr ""
+
+#: templates/profile.html:76
+msgid "Telegram Chat ID (Optional)"
+msgstr ""
+
+#: templates/profile.html:81
+msgid "For example: 123456789"
+msgstr ""
+
+#: templates/profile.html:84 templates/profile.html:85
+msgid "Get automatically"
+msgstr ""
+
+#: templates/profile.html:90
+msgid "Test"
+msgstr ""
+
+#: templates/profile.html:101
+msgid "Send /start to your bot in Telegram"
+msgstr ""
+
+#: templates/profile.html:102
+msgid "Click the \"Get automatically\" button above"
+msgstr ""
+
+#: templates/profile.html:103
+msgid "Chat ID will be filled automatically"
+msgstr ""
+
+#: templates/profile.html:105
+msgid "Method 2 (Manual):"
+msgstr ""
+
+#: templates/profile.html:107
+msgid "Find @userinfobot in Telegram"
+msgstr ""
+
+#: templates/profile.html:108
+msgid "Send /start"
+msgstr ""
+
+#: templates/profile.html:109
+msgid "The bot will send you the Chat ID"
+msgstr ""
+
+#: templates/profile.html:110
+msgid "Enter this number in the field above"
+msgstr ""
+
+#: templates/profile.html:123
+msgid "Test Email & Telegram"
+msgstr ""
+
+#: templates/profile.html:134
+msgid "Statistics"
+msgstr ""
+
+#: templates/profile.html:151
+msgid "Registration date"
+msgstr ""
+
+#: templates/profile.html:160
+msgid "Days"
+msgstr ""
+
+#: templates/profile.html:180
+msgid "My Medications"
+msgstr ""
+
+#: templates/profile.html:181
+msgid "View and manage all your stored medicines"
+msgstr ""
+
+#: templates/profile.html:188
+msgid "Edit Profile"
+msgstr ""
+
+#: templates/profile.html:189
+msgid "Update your personal info and city settings"
+msgstr ""
+
+#: templates/profile.html:196
+msgid "Test Alerts"
+msgstr ""
+
+#: templates/profile.html:197
+msgid "Send a test notification to Telegram or Email"
+msgstr ""
+
+#: templates/profile.html:225 templates/profile.html:250
+#: templates/select_country.html:73
+msgid "Select city/region..."
+msgstr ""
+
+#: templates/profile.html:236 templates/select_country.html:84
+msgid "Error loading cities"
+msgstr ""
+
+#: templates/profile.html:284
+msgid "Should a test message be sent?"
+msgstr ""
+
+#: templates/profile.html:303
+msgid "Getting Chat ID..."
+msgstr ""
+
+#: templates/profile.html:314
+msgid "Chat ID found!"
+msgstr ""
+
+#: templates/profile.html:317
+msgid "Now click the \"Save\" button."
+msgstr ""
+
+#: templates/profile.html:323 templates/profile.html:333
+msgid "Error:"
+msgstr ""
+
+#: templates/profile.html:325
+msgid "Please send /start to your bot in Telegram and try again."
+msgstr ""
+
+#: templates/profile.html:335
+msgid "Check the Bot Token or enter manually."
+msgstr ""
+
+#: templates/register.html:15
+msgid "Create a new account and get started"
+msgstr ""
+
+#: templates/register.html:30
+msgid "Enter your username"
+msgstr ""
+
+#: templates/register.html:59
+msgid "At least 6 characters"
+msgstr ""
+
+#: templates/register.html:63
+msgid "Password must be at least 6 characters"
+msgstr ""
+
+#: templates/register.html:74
+msgid "Already have an account?"
+msgstr ""
+
+#: templates/select_country.html:3
+msgid "Select Country"
+msgstr ""
+
+#: templates/select_country.html:11
+msgid "Select country and city"
+msgstr ""
+
+#: templates/select_country.html:22
+msgid "Select country..."
+msgstr ""
+
+#: templates/select_country.html:61
+msgid "Loading..."
 msgstr ""
 
 #: venv/Lib/site-packages/click/_termui_impl.py:613

@@ -87,7 +87,8 @@ def admin_required(f):
     @login_required
     def decorated_function(*args, **kwargs):
         if not current_user.is_admin:
-            flash('Access denied. Admin privileges required.', 'error')
+            flash(_('Access denied. Admin privileges required.'), 'error')
+
             return redirect(url_for('dashboard'))
         return f(*args, **kwargs)
     return decorated_function
@@ -117,14 +118,16 @@ def login():
             login_user(user, remember=True)
             # Auto-redirect admin to admin panel
             if user.is_admin:
-                flash('Admin login successful', 'success')
+                flash(_('Admin login successful'), 'success')
+
                 return redirect(url_for('admin_dashboard'))
             # Check if user has selected country
             if not user.country:
                 return redirect(url_for('select_country'))
             return redirect(url_for('dashboard'))
         else:
-            flash('Invalid email or password', 'error')
+            flash(_('Invalid email or password'), 'error')
+
     
     return render_template('login.html')
 
@@ -136,11 +139,13 @@ def register():
         password = request.form.get('password')
         
         if User.query.filter_by(username=username).first():
-            flash('Username already exists', 'error')
+            flash(_('Username already exists'), 'error')
+
             return redirect(url_for('register'))
         
         if User.query.filter_by(email=email).first():
-            flash('Email already exists', 'error')
+            flash(_('Email already exists'), 'error')
+
             return redirect(url_for('register'))
         
         user = User(
@@ -153,7 +158,8 @@ def register():
         
         # Auto login after registration
         login_user(user, remember=True)
-        flash('Registration successful! You have been logged in automatically.', 'success')
+        flash(_('Registration successful! You have been logged in automatically.'), 'success')
+
         return redirect(url_for('select_country'))
     
     return render_template('register.html')
@@ -169,7 +175,8 @@ def select_country():
         current_user.city = city
         db.session.commit()
         
-        flash('Country and city selected successfully!', 'success')
+        flash(_('Country and city selected successfully!'), 'success')
+
         return redirect(url_for('dashboard'))
     
     return render_template('select_country.html')
@@ -272,7 +279,8 @@ def add_medication():
         
         db.session.commit()
         
-        flash('Medication added successfully!', 'success')
+        flash(_('Medication added successfully!'), 'success')
+
         return redirect(url_for('dashboard'))
     
     return render_template('add_medication.html')
@@ -314,7 +322,8 @@ def profile():
             # Check if email is already taken
             existing_user = User.query.filter_by(email=email).first()
             if existing_user:
-                flash('This email is already registered with another account.', 'error')
+                flash(_('This email is already registered with another account.'), 'error')
+
                 return redirect(url_for('profile'))
             current_user.email = email
 
@@ -323,14 +332,16 @@ def profile():
         if telegram_chat_id:
             current_user.telegram_chat_id = telegram_chat_id
             # Test message
-            test_message = f"✅ Hello {current_user.username}! Telegram bot is working. Chat ID: {telegram_chat_id}"
+            test_message = _("✅ Hello %(username)s! Telegram bot is working. Chat ID: %(chat_id)s", username=current_user.username, chat_id=telegram_chat_id)
+
             send_telegram_message(telegram_chat_id, test_message)
         else:
             current_user.telegram_chat_id = None
         
         db.session.commit()
         
-        flash('Profile updated successfully!', 'success')
+        flash(_('Profile updated successfully!'), 'success')
+
         return redirect(url_for('profile'))
     
     return render_template('profile.html')
@@ -340,16 +351,19 @@ def profile():
 def test_telegram():
     """Test Telegram bot connection"""
     if not current_user.telegram_chat_id:
-        flash('Telegram Chat ID not entered!', 'error')
+        flash(_('Telegram Chat ID not entered!'), 'error')
+
         return redirect(url_for('profile'))
     
-    test_message = f"🧪 Test Message!\n\nHello {current_user.username}!\nThis is a test message. If you see this, the bot is working correctly! ✅"
+    test_message = _("🧪 Test Message!\n\nHello %(username)s!\nThis is a test message. If you see this, the bot is working correctly! ✅", username=current_user.username)
+
     result = send_telegram_message(current_user.telegram_chat_id, test_message)
     
     if result:
-        flash('Test message sent! Check Telegram.', 'success')
+        flash(_('Test message sent! Check Telegram.'), 'success')
     else:
-        flash('Message not sent! Check Chat ID and Bot Token.', 'error')
+        flash(_('Message not sent! Check Chat ID and Bot Token.'), 'error')
+
     
     return redirect(url_for('profile'))
 
@@ -360,23 +374,26 @@ def test_notifications():
     results = {'email': False, 'telegram': False}
     
     # Test Email
-    email_subject = "Health Track: Test Notification"
-    email_body = f"Hello {current_user.username}!\nThis is a manual test of your email notification system."
+    email_subject = _("Health Track: Test Notification")
+    email_body = _("Hello %(username)s!\nThis is a manual test of your email notification system.", username=current_user.username)
+
     results['email'] = send_email_notification(current_user.email, email_subject, email_body)
     
     # Test Telegram
     if current_user.telegram_chat_id:
-        telegram_message = f"🧪 Health Track Test!\n\nHello {current_user.username}!\nIf you see this, your Telegram notifications are working correctly! ✅"
+        telegram_message = _("🧪 Health Track Test!\n\nHello %(username)s!\nIf you see this, your Telegram notifications are working correctly! ✅", username=current_user.username)
+
         results['telegram'] = send_telegram_message(current_user.telegram_chat_id, telegram_message)
     
     if results['email'] and (not current_user.telegram_chat_id or results['telegram']):
-        flash('Test notifications sent! Check your email and Telegram.', 'success')
+        flash(_('Test notifications sent! Check your email and Telegram.'), 'success')
     elif results['email']:
-        flash('Email sent, but Telegram failed (check Chat ID or Bot Token).', 'warning')
+        flash(_('Email sent, but Telegram failed (check Chat ID or Bot Token).'), 'warning')
     elif results['telegram']:
-        flash('Telegram sent, but Email failed (check SMTP settings).', 'warning')
+        flash(_('Telegram sent, but Email failed (check SMTP settings).'), 'warning')
     else:
-        flash('Both Email and Telegram notifications failed configuration.', 'error')
+        flash(_('Both Email and Telegram notifications failed configuration.'), 'error')
+
         
     return redirect(url_for('profile'))
 
@@ -386,7 +403,8 @@ def get_chat_id():
     """Get Chat ID from Telegram bot - user should send /start to bot first"""
     token = app.config['TELEGRAM_BOT_TOKEN']
     if not token:
-        flash('Telegram Bot Token not found! Add TELEGRAM_BOT_TOKEN to .env file.', 'error')
+        flash(_('Telegram Bot Token not found! Add TELEGRAM_BOT_TOKEN to .env file.'), 'error')
+
         return redirect(url_for('profile'))
     
     try:
@@ -442,7 +460,8 @@ def get_chat_id():
 @login_required
 def logout():
     logout_user()
-    flash('Logged out successfully', 'info')
+    flash(_('Logged out successfully'), 'info')
+
     return redirect(url_for('login'))
 
 @app.route('/api/cities/<country_code>')
@@ -508,7 +527,8 @@ def admin_delete_user(user_id):
     username = user.username
     db.session.delete(user)
     db.session.commit()
-    flash(f'User {username} deleted successfully', 'success')
+    flash(_('User %(username)s deleted successfully', username=username), 'success')
+
     return redirect(url_for('admin_users'))
 
 @app.route('/admin/database/clear', methods=['POST'])
@@ -526,9 +546,10 @@ def admin_clear_database():
         User.query.filter(User.is_admin != True).delete()
         
         db.session.commit()
-        flash('Database cleared successfully (admin user preserved)', 'success')
+        flash(_('Database cleared successfully (admin user preserved)'), 'success')
     except Exception as e:
-        flash(f'Error clearing database: {str(e)}', 'error')
+        flash(_('Error clearing database: %(error)s', error=str(e)), 'error')
+
     
     return redirect(url_for('admin_dashboard'))
 
@@ -540,7 +561,8 @@ def generate_mock_weather(city_name):
     humidity = 30 + (hash_val % 50)
     wind_speed = (hash_val % 20) + 1
     
-    conditions = [('Clear', '01d'), ('Mainly Cloudy', '03d'), ('Rain', '10d'), ('Snow', '13d')]
+    conditions = [(_('Clear'), '01d'), (_('Mainly Cloudy'), '03d'), (_('Rain'), '10d'), (_('Snow'), '13d')]
+
     desc, icon = conditions[hash_val % len(conditions)]
     
     advice = get_weather_advice(temp, desc, humidity, wind_speed)
@@ -605,35 +627,36 @@ def get_weather_advice(temp, desc, humidity, wind_speed):
     
     # Temperature advice
     if temp < 0:
-        advice_parts.append("Very cold! Wear warm clothes and stay outside for short periods.")
+        advice_parts.append(_("Very cold! Wear warm clothes and stay outside for short periods."))
     elif temp < 10:
-        advice_parts.append("Cold weather. Wear warm clothes.")
+        advice_parts.append(_("Cold weather. Wear warm clothes."))
     elif temp > 35:
-        advice_parts.append("Very hot! Drink plenty of water and avoid direct sunlight.")
+        advice_parts.append(_("Very hot! Drink plenty of water and avoid direct sunlight."))
     elif temp > 25:
-        advice_parts.append("Hot weather. Drink plenty of water and wear light clothing.")
+        advice_parts.append(_("Hot weather. Drink plenty of water and wear light clothing."))
     else:
-        advice_parts.append("Comfortable weather. Great time for outdoor activities!")
+        advice_parts.append(_("Comfortable weather. Great time for outdoor activities!"))
     
     # Weather condition advice
     if 'rain' in desc.lower():
-        advice_parts.append("It's raining. Take an umbrella and avoid getting wet.")
+        advice_parts.append(_("It's raining. Take an umbrella and avoid getting wet."))
     elif 'snow' in desc.lower():
-        advice_parts.append("It's snowing. Be careful and avoid slippery surfaces.")
+        advice_parts.append(_("It's snowing. Be careful and avoid slippery surfaces."))
     elif 'fog' in desc.lower():
-        advice_parts.append("Foggy. Visibility is limited, be cautious.")
+        advice_parts.append(_("Foggy. Visibility is limited, be cautious."))
     
     # Humidity advice
     if humidity > 80:
-        advice_parts.append("High humidity. Breathing may be difficult.")
+        advice_parts.append(_("High humidity. Breathing may be difficult."))
     elif humidity < 30:
-        advice_parts.append("Dry air. Drink plenty of water and moisturize your skin.")
+        advice_parts.append(_("Dry air. Drink plenty of water and moisturize your skin."))
     
     # Wind advice
     if wind_speed > 15:
-        advice_parts.append("Strong wind. Be careful and secure loose items.")
+        advice_parts.append(_("Strong wind. Be careful and secure loose items."))
     
-    return " ".join(advice_parts) if advice_parts else "Normal weather. Regular walking is recommended for health."
+    return " ".join(advice_parts) if advice_parts else _("Normal weather. Regular walking is recommended for health.")
+
 
 def calculate_us_aqi(pm25):
     """Calculate US AQI (0-500) based on EPA PM2.5 breakpoints"""
@@ -714,17 +737,18 @@ def generate_mock_aqi(city_name):
     else:
         avg_score = 5
         
-    aqi_labels = {1: 'Good', 2: 'Moderate', 3: 'Unhealthy for Sensitive', 4: 'Unhealthy', 5: 'Very Unhealthy'}
+    aqi_labels = {1: _('Good'), 2: _('Moderate'), 3: _('Unhealthy for Sensitive Groups'), 4: _('Unhealthy'), 5: _('Very Unhealthy')}
     aqi_colors = {
         1: '#10b981', 2: '#fbb117', 3: '#f59e0b', 4: '#ef4444', 5: '#991b1b'
     }
     aqi_advice = {
-        1: 'Air quality is satisfactory, and air pollution poses little or no risk.',
-        2: 'Air quality is acceptable. However, there may be a risk for some people, particularly those who are unusually sensitive to air pollution.',
-        3: 'Members of sensitive groups may experience health effects. The general public is less likely to be affected.',
-        4: 'Some members of the general public may experience health effects; members of sensitive groups may experience more serious health effects.',
-        5: 'Health alert: The risk of health effects is increased for everyone.'
+        1: _('Air quality is satisfactory, and air pollution poses little or no risk.'),
+        2: _('Air quality is acceptable. However, there may be a risk for some people, particularly those who are unusually sensitive to air pollution.'),
+        3: _('Members of sensitive groups may experience health effects. The general public is less likely to be affected.'),
+        4: _('Some members of the general public may experience health effects; members of sensitive groups may experience more serious health effects.'),
+        5: _('Health alert: The risk of health effects is increased for everyone.')
     }
+
     
     pollutants = {'PM2.5': l_pm25, 'PM10': l_pm10, 'Ozone': l_o3, 'NO2': l_no2, 'SO2': l_so2, 'CO': l_co}
     
