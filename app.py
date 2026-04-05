@@ -308,6 +308,69 @@ def medications():
                          reminder_times_list=reminder_times_list,
                          today=today)
 
+@app.route('/edit_medication/<int:med_id>', methods=['POST'])
+@login_required
+def edit_medication(med_id):
+    try:
+        med = Medication.query.get_or_404(med_id)
+        if med.user_id != current_user.id:
+            flash(_('Access denied.'), 'error')
+            return redirect(url_for('medications'))
+            
+        med.name = request.form.get('name')
+        med.description = request.form.get('description', '')
+        med.quantity_remaining = int(request.form.get('quantity_remaining'))
+        med.quantity_per_dose = int(request.form.get('quantity_per_dose'))
+        med.expiration_date = datetime.strptime(request.form.get('expiration_date'), '%Y-%m-%d').date()
+        med.times_per_day = int(request.form.get('times_per_day', 1))
+        
+        # Update reminders: delete old ones and add new ones
+        Reminder.query.filter_by(medication_id=med.id).delete()
+        
+        reminder_times = []
+        for i in range(med.times_per_day):
+            time_key = f'reminder_time_{i}'
+            if time_key in request.form and request.form.get(time_key):
+                time_str = request.form.get(time_key)
+                reminder_times.append(time_str)
+                reminder_time = datetime.strptime(time_str, '%H:%M').time()
+                reminder = Reminder(
+                    medication_id=med.id,
+                    reminder_time=reminder_time,
+                    is_active=True
+                )
+                db.session.add(reminder)
+        
+        med.reminder_times = json.dumps(reminder_times)
+        db.session.commit()
+        
+        flash(_('Medication updated successfully!'), 'success')
+        return redirect(url_for('medications'))
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error updating medication: {str(e)}', 'error')
+        return redirect(url_for('medications'))
+
+@app.route('/delete_medication/<int:med_id>', methods=['POST'])
+@login_required
+def delete_medication(med_id):
+    try:
+        med = Medication.query.get_or_404(med_id)
+        if med.user_id != current_user.id:
+            flash(_('Access denied.'), 'error')
+            return redirect(url_for('medications'))
+            
+        # Associated reminders will be deleted automatically due to cascade='all, delete-orphan'
+        db.session.delete(med)
+        db.session.commit()
+        
+        flash(_('Medication deleted successfully!'), 'success')
+        return redirect(url_for('medications'))
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error deleting medication: {str(e)}', 'error')
+        return redirect(url_for('medications'))
+
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
