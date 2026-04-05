@@ -281,18 +281,40 @@
     });
 
     function testTelegram() {
-        if (confirm('{{ _("Should a test message be sent?") }}')) {
-            fetch('{{ url_for("test_telegram") }}', {
+        const chatId = document.getElementById('telegram_chat_id').value;
+        if (!chatId) {
+            alert('{{ _("Please enter a Chat ID first!") }}');
+            return;
+        }
 
+        if (confirm('{{ _("Should a test message be sent to Chat ID: ") }}' + chatId + '?')) {
+            const btn = event.target.closest('button');
+            const originalContent = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> {{ _("Sending...") }}';
+
+            fetch('{{ url_for("test_telegram") }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                }
+                },
+                body: JSON.stringify({ chat_id: chatId })
             })
-                .then(response => {
-                    if (response.ok) {
-                        location.reload();
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('{{ _("Test message sent! Check Telegram.") }}');
+                    } else {
+                        alert('{{ _("Error: ") }}' + data.message);
                     }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('{{ _("Connection error. Please try again.") }}');
+                })
+                .finally(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = originalContent;
                 });
         }
     }

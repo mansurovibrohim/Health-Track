@@ -413,20 +413,29 @@ def profile():
 @login_required
 def test_telegram():
     """Test Telegram bot connection"""
-    if not current_user.telegram_chat_id:
+    data = request.get_json() if request.is_json else {}
+    chat_id = data.get('chat_id') or current_user.telegram_chat_id
+    
+    if not chat_id:
+        if request.is_json:
+            return jsonify({'success': False, 'message': _('Telegram Chat ID not entered!')})
         flash(_('Telegram Chat ID not entered!'), 'error')
-
         return redirect(url_for('profile'))
     
     test_message = _("🧪 Test Message!\n\nHello %(username)s!\nThis is a test message. If you see this, the bot is working correctly! ✅", username=current_user.username)
 
-    result = send_telegram_message(current_user.telegram_chat_id, test_message)
+    result = send_telegram_message(chat_id, test_message)
     
+    if request.is_json:
+        if result:
+            return jsonify({'success': True, 'message': _('Test message sent! Check Telegram.')})
+        else:
+            return jsonify({'success': False, 'message': _('Message not sent! Check Chat ID and Bot Token.')})
+
     if result:
         flash(_('Test message sent! Check Telegram.'), 'success')
     else:
         flash(_('Message not sent! Check Chat ID and Bot Token.'), 'error')
-
     
     return redirect(url_for('profile'))
 
@@ -1208,30 +1217,38 @@ def check_medication_reminders():
                     print(f"[Reminder] Sending: {med.name} - {reminder_time.strftime('%H:%M')} to {user.username}")
                     
                     # Send via Email
+                    email_success = False
                     if user.email:
-                        email_result = send_email_notification(user.email, email_subject, email_body)
-                        if email_result:
+                        email_success = send_email_notification(user.email, email_subject, email_body)
+                        if email_success:
                             print(f"[Reminder] Email sent successfully!")
                         else:
                             print(f"[Reminder] Email not sent!")
                     
                     # Send via Telegram if chat_id is set
+                    telegram_success = False
                     if user.telegram_chat_id:
-                        telegram_result = send_telegram_message(user.telegram_chat_id, message)
-                        if telegram_result:
+                        telegram_success = send_telegram_message(user.telegram_chat_id, message)
+                        if telegram_success:
                             print(f"[Reminder] Telegram message sent!")
                         else:
                             print(f"[Reminder] Telegram message not sent!")
                     else:
-                        print(f"[Reminder] Chat ID not found")
+                        print(f"[Reminder] Chat ID not found for user: {user.username}")
                     
-                    reminder.last_sent = now
-                    db.session.commit()
+                    # Only mark as sent if at least one method worked or if there's no chat_id/email
+                    if email_success or telegram_success:
+                        reminder.last_sent = now
+                        db.session.commit()
 
 # Initialize scheduler
 scheduler = BackgroundScheduler()
 scheduler.add_job(func=check_medication_reminders, trigger="interval", minutes=1)
-scheduler.start()
+
+# Only start scheduler once, even in debug mode with reloader
+if not app.debug or os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
+    if not scheduler.running:
+        scheduler.start()
 
 if __name__ == '__main__':
     with app.app_context():
