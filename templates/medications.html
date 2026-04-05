@@ -33,7 +33,15 @@
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li>
-                            <a class="dropdown-item" href="#" onclick="editMedication('{{ med.id }}', '{{ med.name }}', '{{ med.quantity_remaining }}', '{{ med.quantity_per_dose }}', '{{ med.expiration_date }}', '{{ med.times_per_day }}', '{{ med.description|replace('\n', ' ')|replace('\r', '') }}', {{ med.reminder_times|safe or '[]' }})">
+                            <a class="dropdown-item edit-med-btn" href="#" 
+                               data-id="{{ med.id }}"
+                               data-name="{{ med.name }}"
+                               data-quantity="{{ med.quantity_remaining }}"
+                               data-dose="{{ med.quantity_per_dose }}"
+                               data-exp="{{ med.expiration_date }}"
+                               data-times="{{ med.times_per_day }}"
+                               data-desc="{{ med.description or '' }}"
+                               data-reminders='{{ med.reminder_times|safe or "[]" }}'>
                                 <i class="fas fa-edit me-2"></i> {{ _('Edit') }}
                             </a>
                         </li>
@@ -231,7 +239,7 @@
 <script>
 function updateReminderTimes(type) {
     const selector = type === 'add' ? 'times_per_day' : 'edit_times_per_day';
-    const listId = type === 'add' ? 'reminderTimesList' : 'edit_reminderTimesList';
+    const listId = type === 'add' ? 'reminderTimesList' : 'editReminderTimesList';
     
     const times = document.getElementById(selector).value;
     const container = document.getElementById(listId);
@@ -247,38 +255,51 @@ function updateReminderTimes(type) {
     }
 }
 
-function editMedication(id, name, quantity, dose, exp, times, desc, reminderTimes) {
-    const form = document.getElementById('editMedicationForm');
-    form.action = `/edit_medication/${id}`;
-    
-    document.getElementById('edit_name').value = name;
-    document.getElementById('edit_quantity_remaining').value = quantity;
-    document.getElementById('edit_quantity_per_dose').value = dose;
-    document.getElementById('edit_expiration_date').value = exp;
-    document.getElementById('edit_description').value = desc;
-    document.getElementById('edit_times_per_day').value = times;
-    
-    const container = document.getElementById('editReminderTimesList');
-    container.innerHTML = '';
-    
-    reminderTimes.forEach((time, i) => {
-        const div = document.createElement('div');
-        div.className = 'mb-2';
-        div.innerHTML = `<input type="time" class="form-control" name="reminder_time_${i}" value="${time}" required>`;
-        container.appendChild(div);
-    });
-    
-    // Add missing inputs if times changed
-    for (let i = reminderTimes.length; i < times; i++) {
-        const div = document.createElement('div');
-        div.className = 'mb-2';
-        div.innerHTML = `<input type="time" class="form-control" name="reminder_time_${i}" required>`;
-        container.appendChild(div);
+// Handle Edit Button Click
+document.addEventListener('click', function(e) {
+    if (e.target.closest('.edit-med-btn')) {
+        e.preventDefault();
+        const btn = e.target.closest('.edit-med-btn');
+        const id = btn.dataset.id;
+        const name = btn.dataset.name;
+        const quantity = btn.dataset.quantity;
+        const dose = btn.dataset.dose;
+        const exp = btn.dataset.exp;
+        const times = btn.dataset.times;
+        const desc = btn.dataset.desc;
+        const reminderTimes = JSON.parse(btn.dataset.reminders);
+        
+        const form = document.getElementById('editMedicationForm');
+        form.action = `/edit_medication/${id}`;
+        
+        document.getElementById('edit_name').value = name;
+        document.getElementById('edit_quantity_remaining').value = quantity;
+        document.getElementById('edit_quantity_per_dose').value = dose;
+        document.getElementById('edit_expiration_date').value = exp;
+        document.getElementById('edit_description').value = desc;
+        document.getElementById('edit_times_per_day').value = times;
+        
+        const container = document.getElementById('editReminderTimesList');
+        container.innerHTML = '';
+        
+        reminderTimes.forEach((time, i) => {
+            const div = document.createElement('div');
+            div.className = 'mb-2';
+            div.innerHTML = `<input type="time" class="form-control" name="reminder_time_${i}" value="${time}" required>`;
+            container.appendChild(div);
+        });
+        
+        for (let i = reminderTimes.length; i < times; i++) {
+            const div = document.createElement('div');
+            div.className = 'mb-2';
+            div.innerHTML = `<input type="time" class="form-control" name="reminder_time_${i}" required>`;
+            container.appendChild(div);
+        }
+        
+        const modal = new bootstrap.Modal(document.getElementById('editMedicationModal'));
+        modal.show();
     }
-    
-    const modal = new bootstrap.Modal(document.getElementById('editMedicationModal'));
-    modal.show();
-}
+});
 </script>
 {% endblock %}
 

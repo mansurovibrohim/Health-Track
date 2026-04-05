@@ -281,6 +281,11 @@ def add_medication():
         
         flash(_('Medication added successfully!'), 'success')
 
+        # Send Telegram confirmation
+        if current_user.telegram_chat_id:
+            msg = _("✅ Medication added: %(name)s\nSchedule: %(times)s times per day", name=name, times=times_per_day)
+            send_telegram_message(current_user.telegram_chat_id, msg)
+
         return redirect(url_for('dashboard'))
     
     return render_template('add_medication.html')
@@ -345,6 +350,12 @@ def edit_medication(med_id):
         db.session.commit()
         
         flash(_('Medication updated successfully!'), 'success')
+
+        # Send Telegram confirmation
+        if current_user.telegram_chat_id:
+            msg = _("✅ Medication updated: %(name)s\nNew schedule: %(times)s times per day", name=med.name, times=med.times_per_day)
+            send_telegram_message(current_user.telegram_chat_id, msg)
+
         return redirect(url_for('medications'))
     except Exception as e:
         db.session.rollback()

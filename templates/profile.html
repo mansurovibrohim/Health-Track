@@ -86,7 +86,7 @@
                             </button>
 
                             {% if current_user.telegram_chat_id %}
-                            <button type="button" class="btn btn-outline-primary" onclick="testTelegram()">
+                            <button type="button" class="btn btn-outline-primary" onclick="testTelegram(event)">
                                 <i class="fas fa-paper-plane"></i> {{ _('Test') }}
                             </button>
 
@@ -280,15 +280,16 @@
         }
     });
 
-    function testTelegram() {
+    function testTelegram(event) {
         const chatId = document.getElementById('telegram_chat_id').value;
         if (!chatId) {
-            alert('{{ _("Please enter a Chat ID first!") }}');
+            alert({{ _("Please enter a Chat ID first!")|tojson|safe }});
             return;
         }
 
-        if (confirm('{{ _("Should a test message be sent to Chat ID: ") }}' + chatId + '?')) {
-            const btn = event.target.closest('button');
+        const confirmMsg = {{ _("Should a test message be sent to Chat ID: ")|tojson|safe }} + chatId + '?';
+        if (confirm(confirmMsg)) {
+            const btn = event.currentTarget || event.target.closest('button');
             const originalContent = btn.innerHTML;
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> {{ _("Sending...") }}';
@@ -303,14 +304,14 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert('{{ _("Test message sent! Check Telegram.") }}');
+                        alert({{ _("Test message sent! Check Telegram.")|tojson|safe }});
                     } else {
-                        alert('{{ _("Error: ") }}' + data.message);
+                        alert({{ _("Error: ")|tojson|safe }} + data.message);
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('{{ _("Connection error. Please try again.") }}');
+                    alert({{ _("Connection error. Please try again.")|tojson|safe }});
                 })
                 .finally(() => {
                     btn.disabled = false;
