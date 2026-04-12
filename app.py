@@ -468,6 +468,15 @@ def test_notifications():
 
         results['telegram'] = send_telegram_message(current_user.telegram_chat_id, telegram_message)
     
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.is_json:
+        return jsonify({
+            'success': results['email'] and (not current_user.telegram_chat_id or results['telegram']),
+            'results': results,
+            'message': _('Test results: Email (%(email)s), Telegram (%(telegram)s)', 
+                         email='OK' if results['email'] else 'FAIL',
+                         telegram='OK' if results['telegram'] else 'FAIL')
+        })
+
     if results['email'] and (not current_user.telegram_chat_id or results['telegram']):
         flash(_('Test notifications sent! Check your email and Telegram.'), 'success')
     elif results['email']:
@@ -477,7 +486,6 @@ def test_notifications():
     else:
         flash(_('Both Email and Telegram notifications failed configuration.'), 'error')
 
-        
     return redirect(url_for('profile'))
 
 @app.route('/get_chat_id', methods=['GET'])
@@ -486,9 +494,10 @@ def get_chat_id():
     """Get Chat ID from Telegram bot - user should send /start to bot first"""
     token = app.config['TELEGRAM_BOT_TOKEN']
     if not token:
-        flash(_('Telegram Bot Token not found! Add TELEGRAM_BOT_TOKEN to .env file.'), 'error')
-
-        return redirect(url_for('profile'))
+        return jsonify({
+            'success': False, 
+            'message': _('Telegram Bot Token not found! Ensure TELEGRAM_BOT_TOKEN is set in server Environment Variables.')
+        })
     
     try:
         # Get recent updates from bot
