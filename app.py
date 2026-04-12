@@ -1139,7 +1139,7 @@ def get_city_rankings(country, current_city_data=None):
 def send_email_notification(email, subject, body):
     """Send email notification"""
     if not app.config['MAIL_USERNAME'] or not app.config['MAIL_PASSWORD']:
-        print(f"[Email] SMTP not configured. Message: {subject}")
+        print(f"[Email] SMTP not configured. Skipping email to: {email}")
         return False
     
     try:
@@ -1153,7 +1153,9 @@ def send_email_notification(email, subject, body):
         print(f"[Email] Message sent successfully to: {email}")
         return True
     except Exception as e:
-        print(f"[Email] Error: {e}")
+        print(f"[Email] Error sending to {email}: {str(e)}")
+        # Log more details about the SMTP config in case of error
+        print(f"[Email] Debug - Server: {app.config['MAIL_SERVER']}, Port: {app.config['MAIL_PORT']}, TLS: {app.config['MAIL_USE_TLS']}, SSL: {app.config['MAIL_USE_SSL']}")
         return False
 
 def send_telegram_message(chat_id, message):
