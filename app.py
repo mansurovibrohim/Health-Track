@@ -1203,7 +1203,9 @@ def send_telegram_message(chat_id, message):
 def check_medication_reminders():
     """Check and send medication reminders"""
     with app.app_context():
-        now = datetime.now()
+        # Set timezone to Uzbekistan (Tashkent) as it is the primary target
+        uz_tz = pytz.timezone('Asia/Tashkent')
+        now = datetime.now(uz_tz)
         current_time = now.time()
         
         # Get all active reminders
@@ -1260,7 +1262,8 @@ def check_medication_reminders():
                     
                     # Only mark as sent if at least one method worked or if there's no chat_id/email
                     if email_success or telegram_success:
-                        reminder.last_sent = now
+                        # Store as naive datetime for database compatibility
+                        reminder.last_sent = now.replace(tzinfo=None)
                         db.session.commit()
 
 # Initialize scheduler
