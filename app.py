@@ -549,43 +549,7 @@ def get_chat_id():
             'message': f'Xatolik: {str(e)}'
         })
 
-@app.route('/debug_config', methods=['GET'])
-@login_required
-def debug_config():
-    """Debug route to check server configuration"""
-    # Only allow for admin (check password or username)
-    if current_user.username != 'tester777' and request.args.get('key') != 'debug123':
-        return "Unauthorized", 403
-        
-    config_info = {
-        'MAIL_SERVER': app.config['MAIL_SERVER'],
-        'MAIL_PORT': app.config['MAIL_PORT'],
-        'MAIL_USE_TLS': app.config['MAIL_USE_TLS'],
-        'MAIL_USE_SSL': app.config['MAIL_USE_SSL'],
-        'MAIL_USERNAME': app.config['MAIL_USERNAME'],
-        'MAIL_PASSWORD_SET': bool(app.config['MAIL_PASSWORD']),
-        'TELEGRAM_BOT_TOKEN_SET': bool(app.config['TELEGRAM_BOT_TOKEN']),
-        'TIMEZONE': str(datetime.now(pytz.timezone('Asia/Tashkent'))),
-        'SERVER_TIME': str(datetime.now())
-    }
-    
-    # Test Email
-    email_test = False
-    email_error = None
-    if app.config['MAIL_USERNAME'] and app.config['MAIL_PASSWORD']:
-        try:
-            msg = Message("Debug Test", recipients=[app.config['MAIL_USERNAME']], body="Test", sender=app.config['MAIL_USERNAME'])
-            mail.send(msg)
-            email_test = True
-        except Exception as e:
-            email_error = str(e)
-
-    return jsonify({
-        'config': config_info,
-        'email_test_success': email_test,
-        'email_test_error': email_error,
-        'scheduler_running': scheduler.running
-    })
+@app.route('/logout')
 @login_required
 def logout():
     logout_user()
